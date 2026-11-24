@@ -12,5 +12,8 @@ module.exports = {
       },
     ],
   },
+  moduleNameMapper: {
+    '\\.module\\.scss$': '<rootDir>/src/test/styleModuleMock.cjs',
+  },
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}'],
 }

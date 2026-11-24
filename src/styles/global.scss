@@ -1,0 +1,21 @@
+@use './tokens';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text);
+  font: var(--font-size-base) / var(--line-height-body) var(--font-body);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--font-size-title);
+  font-weight: 700;
+  line-height: var(--line-height-title);
+  letter-spacing: -0.045em;
+  overflow-wrap: anywhere;
+}
