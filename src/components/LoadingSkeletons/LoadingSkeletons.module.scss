@@ -1,4 +1,10 @@
 .card {
+  position: relative;
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   display: grid;
   gap: var(--space-3);
   min-height: 9rem;
@@ -22,9 +28,10 @@
 .line {
   width: 95%;
   height: 0.8rem;
-}
-.line.short {
-  width: 60%;
+
+  &.short {
+    width: 60%;
+  }
 }
 .count {
   width: 4.5rem;
@@ -77,22 +84,25 @@
 .commentBody {
   width: 95%;
   height: 1rem;
-}
-.commentBody.short {
-  width: 68%;
+
+  &.short {
+    width: 68%;
+  }
 }
 
 .detailTitle {
   flex: 1;
   display: grid;
   gap: 0.2em;
-}
-.detailTitle .shimmer {
-  width: 96%;
-  height: 0.8em;
-}
-.detailTitle .shimmer:last-child {
-  width: 62%;
+
+  .shimmer {
+    width: 96%;
+    height: 0.8em;
+  }
+
+  .shimmer:last-child {
+    width: 62%;
+  }
 }
 
 .heart {
@@ -106,7 +116,101 @@
   width: 90%;
   height: 1lh;
   margin-block: var(--space-1);
+
+  &.short {
+    width: 58%;
+  }
 }
-.detailLine.short {
-  width: 58%;
+
+.postList {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.commentList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.commentRow {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:first-child {
+    padding-block-start: 0;
+  }
+}
+
+.commentAvatar {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--lane);
+}
+
+.detailCard {
+  position: relative;
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  border: 0;
+  padding-inline: 0;
+
+  h1 {
+    font-size: clamp(2.05rem, 6vw, 3.65rem);
+  }
+}
+
+.detailHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  h3 {
+    font-size: clamp(1.38rem, 3vw, 1.85rem);
+    line-height: 1.15;
+    font-weight: 650;
+  }
+}
+
+.detailBody {
+  max-width: 64ch;
+  margin-top: var(--space-5);
+  font-size: 1.15rem;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.detailComments {
+  margin-top: var(--space-6);
+  padding-block-start: var(--space-5);
+  border-top: 1px solid var(--border);
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 650;
+  }
+}
+
+.detailCommentsHeading {
+  justify-content: flex-start;
+  margin-bottom: var(--space-4);
 }

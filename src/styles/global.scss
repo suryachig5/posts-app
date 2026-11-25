@@ -30,10 +30,10 @@ input {
 
 button {
   cursor: pointer;
-}
 
-button:disabled {
-  cursor: wait;
+  &:disabled {
+    cursor: wait;
+  }
 }
 
 :focus-visible {

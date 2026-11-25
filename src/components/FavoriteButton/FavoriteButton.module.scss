@@ -7,14 +7,13 @@
   border-radius: 0.65rem;
   background: transparent;
   color: var(--accent);
-}
-.button {
   flex: 0 0 var(--touch);
   position: relative;
   z-index: 1;
   border-radius: 50%;
   color: var(--muted);
 }
+
 .selected {
   color: var(--favorite);
 }

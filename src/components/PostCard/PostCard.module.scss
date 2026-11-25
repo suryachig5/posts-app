@@ -5,30 +5,33 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-}
-.card:has(.link:focus-visible) {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
+
+  &:has(.link:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
 }
 .heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
-}
-.heading h3 {
-  font-size: clamp(1.38rem, 3vw, 1.85rem);
-  line-height: 1.15;
-  font-weight: 650;
+
+  h3 {
+    font-size: clamp(1.38rem, 3vw, 1.85rem);
+    line-height: 1.15;
+    font-weight: 650;
+  }
 }
 .link {
   text-decoration: none;
-}
-.link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--radius);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius);
+  }
 }
 .body {
   color: var(--muted);
@@ -43,9 +46,10 @@
   color: var(--accent);
   font-size: 0.85rem;
   font-weight: 650;
-}
-.footer > :last-child {
-  margin-inline-start: auto;
+
+  > :last-child {
+    margin-inline-start: auto;
+  }
 }
 @media (hover: hover) and (pointer: fine) {
   .link:hover {

@@ -1,6 +1,5 @@
 import classNames from 'classnames'
 import sharedStyles from '../../styles/shared.module.scss'
-import postCardStyles from '../../components/PostCard/PostCard.module.scss'
 import styles from './PostDetailsPage.module.scss'
 import { useNavigate, useParams } from 'react-router-dom'
 import { isNotFound } from '../../api/posts'
@@ -61,13 +60,13 @@ function PostArticle({ post }: PostArticleProps) {
   const showPostsByUser = useFeedFilter((state) => state.showPostsByUser)
 
   return (
-    <article className={classNames(postCardStyles.card, styles.card)}>
-      <div className={postCardStyles.heading}>
+    <article className={styles.card}>
+      <div className={styles.heading}>
         <h1>{title}</h1>
         <FavoriteButton postId={id} title={title} />
       </div>
-      <p className={sharedStyles.postUser}>User {userId}</p>
-      <p className={classNames(styles.body, postCardStyles.body)}>{body}</p>
+      <p className={sharedStyles.postUser}>Posted by User {userId}</p>
+      <p className={styles.body}>{body}</p>
       <button
         className={sharedStyles.textButton}
         type="button"

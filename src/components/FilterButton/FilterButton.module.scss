@@ -11,9 +11,10 @@
   background: transparent;
   color: var(--muted);
   font-weight: 650;
-}
-.button.selected {
-  color: var(--accent);
+
+  &.selected {
+    color: var(--accent);
+  }
 }
 .icon {
   display: inline-flex;
