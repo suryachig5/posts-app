@@ -34,10 +34,16 @@ npm run dev
 - `components/LoadingSkeletons/` contains the loading placeholders and shimmer styles.
 - `hooks/` defines the TanStack Query calls and cache reuse.
 - `api/` contains the Axios REST client and response types.
-- `store/` persists favorite IDs with Zustand.
+- `store/` defines the Zustand stores for search, filters, and favorite post IDs.
 - `styles/` contains shared design tokens and base styles.
 
-The feed fetches all posts and comments in parallel. It groups comments by post ID to calculate counts and searches post titles and bodies locally. The detail page reuses cached feed data when available. If you open a post directly with an empty cache, it fetches only that post and its comments. Search, Favorites, and the user filter stay in memory as you navigate. The user dropdown is built from the posts’ user IDs. In Favorites it lists users with saved posts. “More posts by this user” opens the filtered feed, and “Reset filters” clears all active filters. The app saves favorite post IDs in `localStorage` so favorites are still available after you close and reopen the browser.
+## State and data flow
+
+**TanStack Query owns server state.** The feed fetches posts and comments in parallel and renders posts as soon as they arrive. Comment counts come from grouping comments by post ID. The detail page reuses cached feed data when available. A direct visit with an empty cache fetches only the selected post and its comments.
+
+**Zustand owns client state.** Search text, active filters, and favorite post IDs live in Zustand. Search and filters stay in memory during navigation. Favorite IDs are saved in `localStorage` so favorites survive a browser restart. The feed applies search and filters locally to the posts in the query cache.
+
+The user dropdown is built from the posts’ user IDs. In Favorites, it lists users with saved posts. “More posts by this user” opens the filtered feed, and “Reset filters” clears all active filters.
 
 ## Component conventions
 

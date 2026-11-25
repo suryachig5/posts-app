@@ -3,6 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { isNotFound } from './api/posts'
+import { QUERY_GC_TIME_MS, QUERY_STALE_TIME_MS } from './constants/queryTimes'
 import { AppRoutes } from './routes/AppRoutes'
 import '@fontsource-variable/source-sans-3'
 import './styles/global.scss'
@@ -10,8 +11,8 @@ import './styles/global.scss'
 const client = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60_000,
-      gcTime: 10 * 60_000,
+      staleTime: QUERY_STALE_TIME_MS,
+      gcTime: QUERY_GC_TIME_MS,
       retry: (failureCount, error) => !isNotFound(error) && failureCount < 1,
     },
   },

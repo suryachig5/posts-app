@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { API_TIMEOUT_MS } from '../constants/queryTimes'
 
 /** A post returned by the posts API. */
 export interface Post {
@@ -19,7 +20,7 @@ export interface Comment {
 
 const client = axios.create({
   baseURL: 'https://jsonplaceholder.typicode.com',
-  timeout: 10_000,
+  timeout: API_TIMEOUT_MS,
 })
 
 /** Fetches the full list of posts for the feed. */
@@ -28,7 +29,7 @@ export async function fetchPosts() {
 }
 
 /** Fetches a single post by ID and supports request cancellation. */
-export async function fetchPost(postId: number, signal: AbortSignal) {
+export async function fetchIndividualPost(postId: number, signal: AbortSignal) {
   return (await client.get<Post>(`/posts/${postId}`, { signal })).data
 }
 

@@ -1,0 +1,5 @@
+const MS_PER_MINUTE = 60000
+
+export const QUERY_STALE_TIME_MS = 5 * MS_PER_MINUTE
+export const QUERY_GC_TIME_MS = 10 * MS_PER_MINUTE
+export const API_TIMEOUT_MS = 10000

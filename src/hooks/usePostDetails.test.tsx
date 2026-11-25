@@ -7,7 +7,7 @@ import {
   it,
   jest,
 } from '@jest/globals'
-import { fetchComments, fetchPost, fetchPosts } from '../api/posts'
+import { fetchComments, fetchIndividualPost, fetchPosts } from '../api/posts'
 import { usePostDetails } from './usePostDetails'
 import { commentsListOptions, postsListOptions } from './usePostsList'
 import {
@@ -21,7 +21,7 @@ import { createQueryHarness } from '../test/queryHarness'
 jest.mock('../api/posts')
 
 const fetchPostsMock = jest.mocked(fetchPosts)
-const fetchPostMock = jest.mocked(fetchPost)
+const fetchPostMock = jest.mocked(fetchIndividualPost)
 const fetchCommentsMock = jest.mocked(fetchComments)
 
 beforeEach(() => {

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { fetchComments, fetchPost } from '../api/posts'
+import { fetchComments, fetchIndividualPost } from '../api/posts'
 import { commentsListOptions, postsListOptions } from './usePostsList'
 
 /** Reuses completed or in-flight feed queries before requesting a specific post's data. */
@@ -18,7 +18,7 @@ export function usePostDetails(postId: number) {
           : undefined
       return (
         cached?.find((entry) => entry.id === postId) ??
-        fetchPost(postId, signal)
+        fetchIndividualPost(postId, signal)
       )
     },
     initialData: () =>

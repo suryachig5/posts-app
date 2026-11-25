@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, expect, it, jest } from '@jest/globals'
-import { fetchComments, fetchPost, fetchPosts } from '../../api/posts'
+import { fetchComments, fetchIndividualPost, fetchPosts } from '../../api/posts'
 import { firstComment, firstPost, secondPost } from '../../test/mockData'
 import { createQueryHarness } from '../../test/queryHarness'
 import { useFeedFilter } from '../../store/feedFilter'
@@ -14,7 +14,7 @@ jest.mock('../../api/posts')
 beforeEach(() => {
   jest.resetAllMocks()
   useFeedFilter.setState({ userId: null, search: '', favoritesOnly: false })
-  jest.mocked(fetchPost).mockResolvedValue(firstPost)
+  jest.mocked(fetchIndividualPost).mockResolvedValue(firstPost)
   jest.mocked(fetchComments).mockResolvedValue([firstComment])
 })
 
@@ -55,7 +55,10 @@ it.each([0, -2, 1.5])(
     renderDetails(`/posts/${id}`)
 
     await screen.findByRole('heading', { name: firstPost.title })
-    expect(fetchPost).toHaveBeenCalledWith(id, expect.any(AbortSignal))
+    expect(fetchIndividualPost).toHaveBeenCalledWith(
+      id,
+      expect.any(AbortSignal),
+    )
     expect(fetchComments).toHaveBeenCalledWith(expect.any(AbortSignal), id)
   },
 )
@@ -63,12 +66,12 @@ it.each([0, -2, 1.5])(
 it('should show a not-found view for invalid IDs without calling the API', () => {
   renderDetails('/posts/invalid')
   expect(screen.getByRole('heading', { name: 'Post not found' })).toBeTruthy()
-  expect(fetchPost).not.toHaveBeenCalled()
+  expect(fetchIndividualPost).not.toHaveBeenCalled()
 })
 
 it('should show a not-found view when the post API returns a 404', async () => {
   jest
-    .mocked(fetchPost)
+    .mocked(fetchIndividualPost)
     .mockRejectedValue({ isAxiosError: true, response: { status: 404 } })
   renderDetails()
   expect(
@@ -78,7 +81,7 @@ it('should show a not-found view when the post API returns a 404', async () => {
 
 it('should retry a failed post request', async () => {
   const user = userEvent.setup()
-  jest.mocked(fetchPost).mockRejectedValueOnce(new Error('Offline'))
+  jest.mocked(fetchIndividualPost).mockRejectedValueOnce(new Error('Offline'))
   renderDetails()
   expect(await screen.findByText('We couldn’t load this post.')).toBeTruthy()
   expect(

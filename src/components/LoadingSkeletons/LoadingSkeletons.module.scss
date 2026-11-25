@@ -183,12 +183,6 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
-
-  h3 {
-    font-size: clamp(1.38rem, 3vw, 1.85rem);
-    line-height: 1.15;
-    font-weight: 650;
-  }
 }
 
 .detailBody {

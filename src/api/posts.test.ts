@@ -1,5 +1,10 @@
 import { describe, expect, it, jest } from '@jest/globals'
-import { fetchComments, fetchPost, fetchPosts, isNotFound } from './posts'
+import {
+  fetchComments,
+  fetchIndividualPost,
+  fetchPosts,
+  isNotFound,
+} from './posts'
 import { firstComment, firstPost } from '../test/mockData'
 
 const mockGet = jest.fn<(...args: unknown[]) => Promise<unknown>>()
@@ -25,7 +30,7 @@ describe('posts API', () => {
   it('should request a single post with a cancellation signal', async () => {
     const { signal } = new AbortController()
     mockGet.mockResolvedValueOnce({ data: firstPost })
-    await expect(fetchPost(1, signal)).resolves.toEqual(firstPost)
+    await expect(fetchIndividualPost(1, signal)).resolves.toEqual(firstPost)
     expect(mockGet).toHaveBeenLastCalledWith('/posts/1', { signal })
   })
 
