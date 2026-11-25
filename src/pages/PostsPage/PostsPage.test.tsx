@@ -17,7 +17,7 @@ beforeEach(() => {
   jest.mocked(fetchPosts).mockResolvedValue([firstPost, secondPost])
   jest.mocked(fetchComments).mockResolvedValue([firstComment])
   useFavorites.setState({ favoriteIds: [] })
-  useFeedFilter.setState({ search: '', favoritesOnly: false })
+  useFeedFilter.setState({ search: '', favoritesOnly: false, userId: null })
 })
 
 function renderFeed() {
@@ -146,4 +146,53 @@ it('should update the sticky toolbar when the heading and marker scroll away', a
       value: originalObserver,
     })
   }
+})
+
+it('should offer only users with saved posts in Favorites', async () => {
+  const user = userEvent.setup()
+  jest
+    .mocked(fetchPosts)
+    .mockResolvedValue([firstPost, { ...secondPost, userId: 2 }])
+  useFavorites.setState({ favoriteIds: [firstPost.id] })
+  useFeedFilter.setState({ userId: 2 })
+  renderFeed()
+
+  await user.click(await screen.findByRole('button', { name: 'Favorites' }))
+  const trigger = screen.getByRole('button', {
+    name: 'Filter by user: All users',
+  })
+  await user.click(trigger)
+  expect(screen.getByRole('button', { name: 'User 1' })).toBeTruthy()
+  expect(screen.queryByRole('button', { name: 'User 2' })).toBeNull()
+  await user.click(screen.getByRole('button', { name: 'User 1' }))
+  expect(screen.getByRole('link', { name: firstPost.title })).toBeTruthy()
+
+  await user.click(screen.getByRole('button', { name: 'All posts' }))
+  await user.click(
+    screen.getByRole('button', { name: 'Filter by user: User 1' }),
+  )
+  expect(screen.getByRole('button', { name: 'User 2' })).toBeTruthy()
+})
+
+it('should reset search, user, and Favorites without removing saved posts', async () => {
+  const user = userEvent.setup()
+  useFavorites.setState({ favoriteIds: [firstPost.id] })
+  useFeedFilter.setState({ search: 'no match', userId: 1, favoritesOnly: true })
+  renderFeed()
+
+  const results = await screen.findByRole('region', { name: 'Favorite posts' })
+  expect(await within(results).findByText('0 posts')).toBeTruthy()
+  await user.click(
+    within(results).getByRole('button', { name: 'Reset filters' }),
+  )
+
+  expect(screen.getByRole<HTMLInputElement>('searchbox').value).toBe('')
+  expect(
+    screen.getByRole('button', { name: 'Filter by user: All users' }),
+  ).toBeTruthy()
+  expect(
+    screen.getByRole('button', { name: 'All posts', pressed: true }),
+  ).toBeTruthy()
+  expect(screen.queryByRole('button', { name: 'Reset filters' })).toBeNull()
+  expect(useFavorites.getState().favoriteIds).toEqual([firstPost.id])
 })

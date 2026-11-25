@@ -2,15 +2,18 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, expect, it, jest } from '@jest/globals'
-import { fetchComments, fetchPost } from '../../api/posts'
-import { firstComment, firstPost } from '../../test/mockData'
+import { fetchComments, fetchPost, fetchPosts } from '../../api/posts'
+import { firstComment, firstPost, secondPost } from '../../test/mockData'
 import { createQueryHarness } from '../../test/queryHarness'
+import { useFeedFilter } from '../../store/feedFilter'
+import { PostsPage } from '../PostsPage/PostsPage'
 import PostDetailsPage from './PostDetailsPage'
 
 jest.mock('../../api/posts')
 
 beforeEach(() => {
   jest.resetAllMocks()
+  useFeedFilter.setState({ userId: null, search: '', favoritesOnly: false })
   jest.mocked(fetchPost).mockResolvedValue(firstPost)
   jest.mocked(fetchComments).mockResolvedValue([firstComment])
 })
@@ -21,6 +24,7 @@ function renderDetails(path = '/posts/1') {
     <QueryProvider>
       <MemoryRouter initialEntries={[path]}>
         <Routes>
+          <Route path="/" element={<PostsPage />} />
           <Route path="/posts/:postId" element={<PostDetailsPage />} />
         </Routes>
       </MemoryRouter>
@@ -106,4 +110,26 @@ it('should show the post while comments are still loading', async () => {
     await screen.findByRole('heading', { name: firstPost.title }),
   ).toBeTruthy()
   expect(screen.getByRole('status', { name: 'Loading comments' })).toBeTruthy()
+})
+
+it('should open the feed filtered to the post author and allow clearing the filter', async () => {
+  const user = userEvent.setup()
+  jest
+    .mocked(fetchPosts)
+    .mockResolvedValue([firstPost, { ...secondPost, userId: 2 }])
+  useFeedFilter.setState({ search: 'unrelated', favoritesOnly: true })
+  renderDetails()
+
+  await user.click(
+    await screen.findByRole('button', { name: 'More posts by this user' }),
+  )
+  expect(
+    await screen.findByRole('link', { name: firstPost.title }),
+  ).toBeTruthy()
+  expect(screen.queryByRole('link', { name: secondPost.title })).toBeNull()
+  await user.click(
+    screen.getByRole('button', { name: 'Filter by user: User 1' }),
+  )
+  await user.click(screen.getByRole('button', { name: 'All users' }))
+  expect(screen.getByRole('link', { name: secondPost.title })).toBeTruthy()
 })

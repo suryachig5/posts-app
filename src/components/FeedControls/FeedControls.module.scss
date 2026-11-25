@@ -77,3 +77,16 @@
       transform 180ms ease;
   }
 }
+.userFilter {
+  min-width: 8.25rem;
+  display: flex;
+  gap: var(--space-2);
+}
+@media (width < 40rem) {
+  .controls {
+    flex-wrap: wrap;
+  }
+  .userFilter {
+    flex-basis: 100%;
+  }
+}

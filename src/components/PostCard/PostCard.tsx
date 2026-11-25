@@ -1,3 +1,4 @@
+import sharedStyles from '../../styles/shared.module.scss'
 import styles from './PostCard.module.scss'
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -15,7 +16,7 @@ export interface PostCardProps {
 /** Renders a post link, favorite control, and comment count. */
 export function PostCard(props: PostCardProps) {
   const { post, commentCount, commentsFailed } = props
-  const { id, title, body } = post
+  const { id, title, body, userId } = post
 
   return (
     <article className={styles.card}>
@@ -27,6 +28,7 @@ export function PostCard(props: PostCardProps) {
         </h3>
         <FavoriteButton postId={id} title={title} />
       </div>
+      <p className={sharedStyles.postUser}>User {userId}</p>
       <p className={styles.body}>{body}</p>
       <div className={styles.footer}>
         <CommentCount

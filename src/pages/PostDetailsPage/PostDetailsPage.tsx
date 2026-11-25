@@ -2,13 +2,14 @@ import classNames from 'classnames'
 import sharedStyles from '../../styles/shared.module.scss'
 import postCardStyles from '../../components/PostCard/PostCard.module.scss'
 import styles from './PostDetailsPage.module.scss'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { isNotFound } from '../../api/posts'
 import type { Post } from '../../api/posts'
 import { CommentList } from '../../components/CommentList/CommentList'
 import { CommentListSkeleton } from '../../components/LoadingSkeletons/CommentListSkeleton'
 import { FavoriteButton } from '../../components/FavoriteButton/FavoriteButton'
 import { RetryNotice } from '../../components/RetryNotice/RetryNotice'
+import { useFeedFilter } from '../../store/feedFilter'
 import { usePostDetails } from '../../hooks/usePostDetails'
 import { PostDetailsLayout } from './PostDetailsLayout'
 import { PostDetailsSkeleton } from '../../components/LoadingSkeletons/PostDetailsSkeleton'
@@ -55,7 +56,9 @@ function renderDetails(details: ReturnType<typeof usePostDetails>) {
 }
 
 function PostArticle({ post }: PostArticleProps) {
-  const { id, title, body } = post
+  const { id, title, body, userId } = post
+  const navigate = useNavigate()
+  const showPostsByUser = useFeedFilter((state) => state.showPostsByUser)
 
   return (
     <article className={classNames(postCardStyles.card, styles.card)}>
@@ -63,9 +66,22 @@ function PostArticle({ post }: PostArticleProps) {
         <h1>{title}</h1>
         <FavoriteButton postId={id} title={title} />
       </div>
+      <p className={sharedStyles.postUser}>User {userId}</p>
       <p className={classNames(styles.body, postCardStyles.body)}>{body}</p>
+      <button
+        className={sharedStyles.textButton}
+        type="button"
+        onClick={openUserFeed}
+      >
+        More posts by this user
+      </button>
     </article>
   )
+
+  function openUserFeed() {
+    showPostsByUser(userId)
+    void navigate('/')
+  }
 }
 
 function PostComments({ query }: PostCommentsProps) {

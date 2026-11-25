@@ -22,6 +22,8 @@ interface FavoritesPreviewProps {
 }
 
 interface PostFeedProps {
+  onReset?: () => void
+  userId: number | null
   posts: PostsQuery
   comments: CommentsQuery
   visiblePosts: Post[]
@@ -35,7 +37,15 @@ const previewLimit = 4
 export function PostsPage() {
   const { posts, comments } = usePostsList()
   const favoriteIds = useFavorites((state) => state.favoriteIds)
-  const { search, setSearch, favoritesOnly, setFavoritesOnly } = useFeedFilter()
+  const {
+    resetFilters,
+    search,
+    setSearch,
+    favoritesOnly,
+    setFavoritesOnly,
+    userId,
+    setUserId,
+  } = useFeedFilter()
   const normalizedSearchValue = search.trim().toLowerCase()
   const { headingRef, controlsMarkerRef, showCompactTitle, controlsPinned } =
     useStickyControls()
@@ -43,9 +53,19 @@ export function PostsPage() {
   const entries = posts.data ?? []
   const favoritePosts = getFavoritePosts(entries, favoriteIds)
   const scopedPosts = favoritesOnly ? favoritePosts : entries
-  const visiblePosts = getMatchingPosts(scopedPosts, normalizedSearchValue)
+  const userIds = getUserIds(scopedPosts)
+  const selectedUserId =
+    userId !== null && userIds.includes(userId) ? userId : null
+  const visiblePosts = getMatchingPosts(
+    scopedPosts,
+    normalizedSearchValue,
+    selectedUserId,
+  )
   const showPreview =
-    !favoritesOnly && !normalizedSearchValue && favoritePosts.length > 0
+    !favoritesOnly &&
+    !normalizedSearchValue &&
+    selectedUserId === null &&
+    favoritePosts.length > 0
 
   return (
     <>
@@ -61,6 +81,9 @@ export function PostsPage() {
         <FeedControls
           showCompactTitle={showCompactTitle}
           pinned={controlsPinned}
+          userIds={userIds}
+          userId={selectedUserId}
+          onChangeUser={setUserId}
           search={search}
           favoritesOnly={favoritesOnly}
           onSearch={setSearch}
@@ -75,6 +98,12 @@ export function PostsPage() {
         />
       )}
       <PostFeed
+        onReset={
+          search !== '' || favoritesOnly || userId !== null
+            ? resetFilters
+            : undefined
+        }
+        userId={selectedUserId}
         posts={posts}
         comments={comments}
         visiblePosts={visiblePosts}
@@ -134,6 +163,8 @@ function PostFeed(props: PostFeedProps) {
     visiblePosts,
     favoritesOnly,
     normalizedSearchValue,
+    userId,
+    onReset,
   } = props
   const commentsFailed = comments.isError && !comments.data
 
@@ -141,12 +172,28 @@ function PostFeed(props: PostFeedProps) {
     <section aria-labelledby="feed-heading">
       <div className={sharedStyles.sectionHeading}>
         <h2 id="feed-heading">
-          {favoritesOnly ? 'Favorite posts' : 'All posts'}
+          {favoritesOnly
+            ? 'Favorite posts'
+            : userId === null
+              ? 'All posts'
+              : `Posts by User ${userId}`}
         </h2>
         {posts.data && (
-          <span className={sharedStyles.resultCount} role="status">
-            {visiblePosts.length} {visiblePosts.length === 1 ? 'post' : 'posts'}
-          </span>
+          <div className={styles.resultActions}>
+            <span className={sharedStyles.resultCount} role="status">
+              {visiblePosts.length}{' '}
+              {visiblePosts.length === 1 ? 'post' : 'posts'}
+            </span>
+            {onReset && (
+              <button
+                className={sharedStyles.textButton}
+                type="button"
+                onClick={onReset}
+              >
+                Reset filters
+              </button>
+            )}
+          </div>
         )}
       </div>
       {commentsFailed && posts.data && (
@@ -214,6 +261,10 @@ function getEmptyMessage(
   return 'No posts to display.'
 }
 
+function getUserIds(posts: Post[]) {
+  return [...new Set(posts.map(({ userId }) => userId))].sort((a, b) => a - b)
+}
+
 function getFavoritePosts(posts: Post[], favoriteIds: number[]) {
   const postById = new Map(posts.map((post) => [post.id, post]))
   return favoriteIds
@@ -221,8 +272,13 @@ function getFavoritePosts(posts: Post[], favoriteIds: number[]) {
     .filter((post) => post !== undefined)
 }
 
-function getMatchingPosts(posts: Post[], normalizedSearchValue: string) {
+function getMatchingPosts(
+  posts: Post[],
+  normalizedSearchValue: string,
+  userId: number | null,
+) {
   return posts.filter((post) => {
+    if (userId !== null && post.userId !== userId) return false
     const { title, body } = post
     return (
       title.toLowerCase().includes(normalizedSearchValue) ||
