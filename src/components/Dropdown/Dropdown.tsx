@@ -33,15 +33,17 @@ export function Dropdown(props: DropdownProps) {
         ref={trigger}
         aria-label={selectedLabel ? `${label}: ${selectedLabel}` : label}
         aria-expanded={open}
-        aria-controls={optionsId}
+        aria-controls={open ? optionsId : undefined}
         onClick={toggle}
       >
         {selectedLabel ?? label}
         <ChevronDown size={16} aria-hidden />
       </button>
-      <ul className={styles.options} id={optionsId} hidden={!open}>
-        {options.map(renderOption)}
-      </ul>
+      {open && (
+        <ul className={styles.options} id={optionsId}>
+          {options.map(renderOption)}
+        </ul>
+      )}
     </div>
   )
 

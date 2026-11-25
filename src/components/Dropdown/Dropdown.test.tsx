@@ -58,3 +58,17 @@ it('should close on Escape or an outside click', async () => {
   await user.click(screen.getByRole('button', { name: 'Outside' }))
   expect(trigger.getAttribute('aria-expanded')).toBe('false')
 })
+
+it('should display the filter label when the selected value is unavailable', () => {
+  render(
+    <Dropdown
+      label="Filter"
+      value="removed"
+      options={[{ label: 'One', value: 'one' }]}
+      onChange={jest.fn()}
+    />,
+  )
+
+  const trigger = screen.getByRole('button', { name: 'Filter' })
+  expect(trigger.textContent).toBe('Filter')
+})

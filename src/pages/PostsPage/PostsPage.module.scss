@@ -17,6 +17,10 @@
   border-radius: var(--radius);
   background: var(--lane);
   margin-bottom: var(--space-6);
+
+  button[aria-hidden='true'] {
+    visibility: hidden;
+  }
 }
 .cards {
   display: grid;

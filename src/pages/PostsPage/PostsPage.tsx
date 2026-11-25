@@ -120,6 +120,7 @@ export function PostsPage() {
 
 function FavoritesPreview(props: FavoritesPreviewProps) {
   const { posts: favoritePosts, comments, showAll } = props
+  const canViewAll = favoritePosts.length > previewLimit
   const commentsFailed = comments.isError && !comments.data
 
   return (
@@ -128,15 +129,15 @@ function FavoritesPreview(props: FavoritesPreviewProps) {
         <h2 id="favorites-heading">
           <Heart size={18} aria-hidden /> Favorites ({favoritePosts.length})
         </h2>
-        {favoritePosts.length > previewLimit && (
-          <button
-            className={sharedStyles.textButton}
-            type="button"
-            onClick={showAll}
-          >
-            View all favorites <ArrowRight size={16} aria-hidden />
-          </button>
-        )}
+        <button
+          className={sharedStyles.textButton}
+          type="button"
+          disabled={!canViewAll}
+          aria-hidden={!canViewAll}
+          onClick={showAll}
+        >
+          View all favorites <ArrowRight size={16} aria-hidden />
+        </button>
       </div>
       <div className={styles.cards}>
         {favoritePosts.slice(0, previewLimit).map((post) => (
