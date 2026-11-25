@@ -1,0 +1,51 @@
+.controls {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding-block: var(--space-2);
+  background: var(--canvas);
+}
+.controls[data-pinned='true']::after {
+  content: '';
+  position: absolute;
+  inset: 100% 0 auto;
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(var(--border), var(--border)) 1;
+  border-image-outset: 0 100vmax;
+  pointer-events: none;
+}
+.title {
+  display: none;
+}
+@media (min-width: 40rem) {
+  .title {
+    display: block;
+    align-self: center;
+    width: 0;
+    margin-right: calc(-1 * var(--space-2));
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-0.5rem);
+    font-size: 1.3rem;
+    font-weight: 700;
+  }
+  .controls[data-compact-title='true'] .title {
+    width: 3.75rem;
+    margin-right: var(--space-1);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (min-width: 40rem) and (prefers-reduced-motion: no-preference) {
+  .title {
+    transition:
+      width 180ms ease,
+      margin-right 180ms ease,
+      opacity 160ms ease,
+      transform 180ms ease;
+  }
+}

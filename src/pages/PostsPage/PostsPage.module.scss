@@ -1,4 +1,4 @@
-.title {
+.heading {
   margin-bottom: var(--space-5);
 }
 .list {
@@ -7,4 +7,12 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.marker {
+  height: 1px;
+  margin-bottom: -1px;
+}
+.list :is(a, button) {
+  scroll-margin-top: 5rem;
 }

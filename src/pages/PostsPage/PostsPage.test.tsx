@@ -2,6 +2,7 @@ import { beforeEach, expect, it, jest } from '@jest/globals'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
+import { useFeedFilter } from '../../store/feedFilter'
 import { PostsPage } from './PostsPage'
 import { fetchComments, fetchPosts } from '../../api/posts'
 import { firstComment, firstPost, secondPost } from '../../test/mockData'
@@ -14,6 +15,7 @@ jest.mock('../../api/posts', () => ({
 
 beforeEach(() => {
   jest.resetAllMocks()
+  useFeedFilter.setState({ search: '' })
   jest.mocked(fetchPosts).mockResolvedValue([firstPost, secondPost])
   jest.mocked(fetchComments).mockResolvedValue([firstComment])
 })
@@ -59,6 +61,27 @@ it('should keep posts visible and retry when comments fail', async () => {
   await user.click(screen.getByRole('button', { name: 'Try again' }))
 
   expect(await screen.findByText('1 comment')).toBeTruthy()
+})
+
+it('should search post titles and bodies case-insensitively and restore results on clear', async () => {
+  const user = userEvent.setup()
+  renderFeed()
+
+  const search = await screen.findByRole('searchbox', { name: 'Search posts' })
+  await user.type(search, ' ORANGE ')
+  expect(screen.getByRole('link', { name: secondPost.title })).toBeTruthy()
+  expect(screen.queryByRole('link', { name: firstPost.title })).toBeNull()
+
+  await user.clear(search)
+  await user.type(search, 'FIRST POST')
+  expect(screen.getByRole('link', { name: firstPost.title })).toBeTruthy()
+  expect(screen.queryByRole('link', { name: secondPost.title })).toBeNull()
+
+  await user.type(search, ' xyz')
+  expect(screen.getByText('No posts match your search.')).toBeTruthy()
+
+  await user.click(screen.getByRole('button', { name: 'Clear search' }))
+  expect(screen.getAllByRole('article')).toHaveLength(2)
 })
 
 function renderFeed() {
