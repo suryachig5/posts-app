@@ -11,7 +11,10 @@ interface FeedFilterState {
   setFavoritesOnly: (favoritesOnly: boolean) => void
 }
 
-/** Keeps search and filter settings in memory across page navigation. */
+/**
+ * Keeps search text, the selected user, and the Favorites filter in memory.
+ * These settings survive route changes and reset on a full page reload.
+ */
 export const useFeedFilter = create<FeedFilterState>((set) => ({
   resetFilters: () => set({ userId: null, search: '', favoritesOnly: false }),
   userId: null,

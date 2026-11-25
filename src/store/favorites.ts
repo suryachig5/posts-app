@@ -6,7 +6,11 @@ interface FavoritesState {
   toggleFavorite: (postId: number) => void
 }
 
-/** Tracks favorite post IDs and persists them in local storage. */
+/**
+ * Persists favorite post IDs in localStorage so saved posts survive a reload.
+ * Storing only IDs keeps the saved list independent of cached post content,
+ * which the feed reads from TanStack Query.
+ */
 export const useFavorites = create<FavoritesState>()(
   persist(
     (set) => ({

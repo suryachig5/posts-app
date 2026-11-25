@@ -2,7 +2,10 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { fetchComments, fetchIndividualPost } from '../api/posts'
 import { commentsListOptions, postsListOptions } from './usePostsList'
 
-/** Reuses completed or in-flight feed queries before requesting a specific post's data. */
+/**
+ * Returns separate queries for the post and its comments by post ID.
+ * Reuses feed data when available and fetches missing data as needed.
+ */
 export function usePostDetails(postId: number) {
   const client = useQueryClient()
   const enabled = Number.isFinite(postId)

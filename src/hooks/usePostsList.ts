@@ -31,7 +31,11 @@ function groupCommentsByPostId(comments: Comment[]) {
   return commentsByPostId
 }
 
-/** Loads posts and groups comments by post ID for the feed. */
+/**
+ * Starts the posts and comments requests in parallel so the feed can render
+ * posts as soon as they arrive. Groups comments by post ID for card counts
+ * while keeping the original list in the query cache for the detail view.
+ */
 export function usePostsList() {
   const posts = useQuery(postsListOptions)
   const comments = useQuery({
