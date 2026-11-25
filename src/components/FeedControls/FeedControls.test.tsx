@@ -39,3 +39,31 @@ it('should forward search, clear, and filter changes from the feed controls', as
   )
   expect(onChangeFilter).toHaveBeenLastCalledWith(false)
 })
+
+it.each([
+  [false, null, 'Search posts…'],
+  [true, null, 'Search favorite posts…'],
+  [false, 2, 'Search posts by User 2…'],
+  [true, 2, 'Search favorite posts by User 2…'],
+])(
+  'should show the search scope for Favorites %s and user %s',
+  (favoritesOnly, userId, placeholder) => {
+    render(
+      <FeedControls
+        showCompactTitle={false}
+        pinned={false}
+        userIds={[2]}
+        userId={userId}
+        onChangeUser={jest.fn()}
+        search=""
+        favoritesOnly={favoritesOnly}
+        onSearch={jest.fn()}
+        onChangeFilter={jest.fn()}
+      />,
+    )
+
+    expect(screen.getByRole('searchbox').getAttribute('placeholder')).toBe(
+      placeholder,
+    )
+  },
+)

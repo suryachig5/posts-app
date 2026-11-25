@@ -1,7 +1,8 @@
 import styles from './PostsPage.module.scss'
 import sharedStyles from '../../styles/shared.module.scss'
 import { ArrowRight, Heart } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import type { Ref } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { FeedControls } from '../../components/FeedControls/FeedControls'
 import { PostListSkeleton } from '../../components/LoadingSkeletons/PostListSkeleton'
 import { CompactPostCard } from '../../components/CompactPostCard/CompactPostCard'
@@ -22,6 +23,7 @@ interface FavoritesPreviewProps {
 }
 
 interface PostFeedProps {
+  resultsRef: Ref<HTMLElement>
   onReset?: () => void
   userId: number | null
   posts: PostsQuery
@@ -46,6 +48,8 @@ export function PostsPage() {
     userId,
     setUserId,
   } = useFeedFilter()
+  const controlsRef = useRef<HTMLDivElement>(null)
+  const resultsRef = useRef<HTMLElement>(null)
   const normalizedSearchValue = search.trim().toLowerCase()
   const { headingRef, controlsMarkerRef, showCompactTitle, controlsPinned } =
     useStickyControls()
@@ -67,6 +71,27 @@ export function PostsPage() {
     selectedUserId === null &&
     favoritePosts.length > 0
 
+  const previousFilters = useRef({ search, favoritesOnly, userId })
+  useLayoutEffect(() => {
+    const previous = previousFilters.current
+    previousFilters.current = { search, favoritesOnly, userId }
+    if (
+      previous.search === search &&
+      previous.favoritesOnly === favoritesOnly &&
+      previous.userId === userId
+    )
+      return
+
+    const controls = controlsRef.current
+    const results = resultsRef.current
+    if (!controls || !results) return
+
+    const offset = results.getBoundingClientRect().top - controls.offsetHeight
+    if (offset < -1) {
+      window.scrollTo({ top: window.scrollY + offset, behavior: 'instant' })
+    }
+  }, [search, favoritesOnly, userId])
+
   return (
     <>
       <div className={styles.heading} ref={headingRef}>
@@ -79,6 +104,7 @@ export function PostsPage() {
       />
       {entries.length > 0 && (
         <FeedControls
+          controlsRef={controlsRef}
           showCompactTitle={showCompactTitle}
           pinned={controlsPinned}
           userIds={userIds}
@@ -98,6 +124,7 @@ export function PostsPage() {
         />
       )}
       <PostFeed
+        resultsRef={resultsRef}
         onReset={
           search !== '' || favoritesOnly || userId !== null
             ? resetFilters
@@ -162,6 +189,7 @@ function PostFeed(props: PostFeedProps) {
     posts,
     comments,
     visiblePosts,
+    resultsRef,
     favoritesOnly,
     normalizedSearchValue,
     userId,
@@ -170,7 +198,7 @@ function PostFeed(props: PostFeedProps) {
   const commentsFailed = comments.isError && !comments.data
 
   return (
-    <section aria-labelledby="feed-heading">
+    <section ref={resultsRef} aria-labelledby="feed-heading">
       <div className={sharedStyles.sectionHeading}>
         <h2 id="feed-heading">
           {favoritesOnly

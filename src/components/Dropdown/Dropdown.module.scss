@@ -28,6 +28,7 @@
   display: grid;
   gap: var(--space-1);
   position: absolute;
+  z-index: 1;
   inset: calc(100% + var(--space-1)) 0 auto;
   max-height: min(16rem, 45vh);
   overflow-y: auto;

@@ -196,3 +196,37 @@ it('should reset search, user, and Favorites without removing saved posts', asyn
   expect(screen.queryByRole('button', { name: 'Reset filters' })).toBeNull()
   expect(useFavorites.getState().favoriteIds).toEqual([firstPost.id])
 })
+
+it('should return to results below the toolbar without moving focus as search continues', async () => {
+  const user = userEvent.setup()
+  renderFeed()
+  const search = await screen.findByRole('searchbox', { name: 'Search posts' })
+  const toolbar = screen.getByRole('search').parentElement!
+  const results = screen.getByRole('region', { name: 'All posts' })
+  Object.defineProperty(toolbar, 'offsetHeight', { value: 80 })
+  const bounds = jest
+    .spyOn(results, 'getBoundingClientRect')
+    .mockReturnValue(new DOMRect(0, 30))
+  const scrollTo = jest.mocked(window.scrollTo)
+  scrollTo.mockClear()
+
+  await user.type(search, 'a')
+
+  expect(scrollTo).toHaveBeenCalledWith({
+    top: window.scrollY - 50,
+    behavior: 'instant',
+  })
+  expect(document.activeElement).toBe(search)
+
+  bounds.mockReturnValue(new DOMRect(0, 80))
+  await user.type(search, 'p')
+  expect(scrollTo).toHaveBeenCalledTimes(1)
+  expect(document.activeElement).toBe(search)
+
+  bounds.mockReturnValue(new DOMRect(0, 20))
+  await user.click(screen.getByRole('button', { name: 'Favorites' }))
+  expect(scrollTo).toHaveBeenLastCalledWith({
+    top: window.scrollY - 60,
+    behavior: 'instant',
+  })
+})

@@ -1,10 +1,12 @@
 import styles from './FeedControls.module.scss'
+import type { Ref } from 'react'
 import { Heart, LayoutList } from 'lucide-react'
 import { Dropdown } from '../Dropdown/Dropdown'
 import { FilterButton } from '../FilterButton/FilterButton'
 import { SearchField } from '../SearchField/SearchField'
 
 interface FeedControlsProps {
+  controlsRef?: Ref<HTMLDivElement>
   showCompactTitle: boolean
   pinned: boolean
   userIds: number[]
@@ -18,6 +20,7 @@ interface FeedControlsProps {
 
 /** Renders the sticky search field, user, favorites filters. */
 export function FeedControls({
+  controlsRef,
   showCompactTitle,
   pinned,
   userIds,
@@ -35,6 +38,7 @@ export function FeedControls({
 
   return (
     <div
+      ref={controlsRef}
       className={styles.controls}
       data-compact-title={showCompactTitle}
       data-pinned={pinned}
@@ -44,7 +48,7 @@ export function FeedControls({
       </span>
       <SearchField
         label="Search posts"
-        placeholder="Search posts…"
+        placeholder={getSearchPlaceholder(favoritesOnly, userId)}
         value={search}
         onChange={onSearch}
       />
@@ -89,4 +93,14 @@ export function FeedControls({
   function changeUser(value: string) {
     onChangeUser(value === '' ? null : Number(value))
   }
+}
+
+function getSearchPlaceholder(favoritesOnly: boolean, userId: number | null) {
+  if (userId === null) {
+    return favoritesOnly ? 'Search favorite posts…' : 'Search posts…'
+  }
+
+  return favoritesOnly
+    ? `Search favorite posts by User ${userId}…`
+    : `Search posts by User ${userId}…`
 }
