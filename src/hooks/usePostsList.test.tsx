@@ -53,7 +53,7 @@ describe('usePostsList', () => {
         ]),
       ),
     )
-    expect(fetchCommentsMock).toHaveBeenCalledTimes(1)
+    expect(fetchCommentsMock).toHaveBeenCalledWith(undefined)
   })
 
   it('should keep posts available when comments fail', async () => {

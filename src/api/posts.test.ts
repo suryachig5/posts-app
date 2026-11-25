@@ -1,26 +1,57 @@
-import { expect, it, jest } from '@jest/globals'
+import { describe, expect, it, jest } from '@jest/globals'
+import { fetchComments, fetchPost, fetchPosts, isNotFound } from './posts'
 import { firstComment, firstPost } from '../test/mockData'
-import { fetchComments, fetchPosts } from './posts'
 
-const mockGet = jest.fn<(path: string) => Promise<unknown>>()
+const mockGet = jest.fn<(...args: unknown[]) => Promise<unknown>>()
 
-jest.mock('axios', () => ({
-  __esModule: true,
-  default: {
-    create: () => ({ get: (path: string) => mockGet(path) }),
-  },
-}))
-
-it('should return posts from the posts endpoint', async () => {
-  mockGet.mockResolvedValueOnce({ data: [firstPost] })
-
-  await expect(fetchPosts()).resolves.toEqual([firstPost])
-  expect(mockGet).toHaveBeenLastCalledWith('/posts')
+jest.mock('axios', () => {
+  const axios = jest.requireActual<typeof import('axios')>('axios').default
+  return {
+    __esModule: true,
+    default: {
+      ...axios,
+      create: () => ({ get: (...args: unknown[]) => mockGet(...args) }),
+    },
+  }
 })
 
-it('should return comments from the comments endpoint', async () => {
-  mockGet.mockResolvedValueOnce({ data: [firstComment] })
+describe('posts API', () => {
+  it('should return the post list response body', async () => {
+    mockGet.mockResolvedValueOnce({ data: [firstPost] })
+    await expect(fetchPosts()).resolves.toEqual([firstPost])
+    expect(mockGet).toHaveBeenLastCalledWith('/posts')
+  })
 
-  await expect(fetchComments()).resolves.toEqual([firstComment])
-  expect(mockGet).toHaveBeenLastCalledWith('/comments')
+  it('should request a single post with a cancellation signal', async () => {
+    const { signal } = new AbortController()
+    mockGet.mockResolvedValueOnce({ data: firstPost })
+    await expect(fetchPost(1, signal)).resolves.toEqual(firstPost)
+    expect(mockGet).toHaveBeenLastCalledWith('/posts/1', { signal })
+  })
+
+  it('should request all comments or filter by post ID', async () => {
+    mockGet.mockResolvedValue({ data: [firstComment] })
+    await expect(fetchComments(undefined)).resolves.toEqual([firstComment])
+    expect(mockGet).toHaveBeenLastCalledWith('/comments', {
+      params: { postId: undefined },
+      signal: undefined,
+    })
+
+    const { signal } = new AbortController()
+    await expect(fetchComments(signal, 1)).resolves.toEqual([firstComment])
+    expect(mockGet).toHaveBeenLastCalledWith('/comments', {
+      params: { postId: 1 },
+      signal,
+    })
+  })
+
+  it('should recognize Axios 404 errors only', () => {
+    expect(isNotFound({ isAxiosError: true, response: { status: 404 } })).toBe(
+      true,
+    )
+    expect(isNotFound({ isAxiosError: true, response: { status: 500 } })).toBe(
+      false,
+    )
+    expect(isNotFound(new Error('offline'))).toBe(false)
+  })
 })

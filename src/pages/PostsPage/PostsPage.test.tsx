@@ -1,6 +1,7 @@
 import { beforeEach, expect, it, jest } from '@jest/globals'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { MemoryRouter } from 'react-router-dom'
 import { PostsPage } from './PostsPage'
 import { fetchComments, fetchPosts } from '../../api/posts'
 import { firstComment, firstPost, secondPost } from '../../test/mockData'
@@ -62,5 +63,10 @@ it('should keep posts visible and retry when comments fail', async () => {
 
 function renderFeed() {
   const { wrapper } = createQueryHarness()
-  render(<PostsPage />, { wrapper })
+  render(
+    <MemoryRouter>
+      <PostsPage />
+    </MemoryRouter>,
+    { wrapper },
+  )
 }

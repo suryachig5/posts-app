@@ -1,24 +1,54 @@
 .card {
+  position: relative;
   min-width: 0;
   padding: var(--space-5);
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  overflow-wrap: anywhere;
 }
-.title {
-  margin: 0;
+.card:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.heading h3 {
   font-size: clamp(1.38rem, 3vw, 1.85rem);
   line-height: 1.15;
   font-weight: 650;
 }
+.link {
+  text-decoration: none;
+}
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+}
 .body {
-  margin: var(--space-3) 0 0;
   color: var(--muted);
+  margin-top: var(--space-3);
 }
 .footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
   margin-top: var(--space-4);
   color: var(--accent);
-  font-size: var(--font-size-sm);
+  font-size: 0.85rem;
   font-weight: 650;
+}
+.footer > :last-child {
+  margin-inline-start: auto;
+}
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--accent);
+  }
 }

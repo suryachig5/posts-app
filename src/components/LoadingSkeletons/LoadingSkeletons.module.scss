@@ -59,3 +59,54 @@
 .icon {
   flex-shrink: 0;
 }
+
+.comment {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 66ch;
+}
+
+.commentTitle {
+  width: 60%;
+  height: 1.5rem;
+}
+.commentEmail {
+  width: 42%;
+  height: 1.1rem;
+}
+.commentBody {
+  width: 95%;
+  height: 1rem;
+}
+.commentBody.short {
+  width: 68%;
+}
+
+.detailTitle {
+  flex: 1;
+  display: grid;
+  gap: 0.2em;
+}
+.detailTitle .shimmer {
+  width: 96%;
+  height: 0.8em;
+}
+.detailTitle .shimmer:last-child {
+  width: 62%;
+}
+
+.heart {
+  flex: 0 0 var(--touch);
+  height: var(--touch);
+  border-radius: 50%;
+}
+
+.detailLine {
+  display: block;
+  width: 90%;
+  height: 1lh;
+  margin-block: var(--space-1);
+}
+.detailLine.short {
+  width: 58%;
+}

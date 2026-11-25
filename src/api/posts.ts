@@ -27,7 +27,24 @@ export async function fetchPosts() {
   return (await client.get<Post[]>('/posts')).data
 }
 
-/** Fetches the comments used to calculate the comments count on the post. */
-export async function fetchComments() {
-  return (await client.get<Comment[]>('/comments')).data
+/** Fetches a single post by ID and supports request cancellation. */
+export async function fetchPost(postId: number, signal: AbortSignal) {
+  return (await client.get<Post>(`/posts/${postId}`, { signal })).data
+}
+
+/** Fetches comments for one post when an ID is supplied, or all comments otherwise. */
+export async function fetchComments(
+  signal: AbortSignal | undefined,
+  postId?: number,
+) {
+  const { data } = await client.get<Comment[]>('/comments', {
+    params: { postId },
+    signal,
+  })
+  return data
+}
+
+/** Checks whether an API request failed with HTTP 404. */
+export function isNotFound(error: unknown) {
+  return axios.isAxiosError(error) && error.response?.status === 404
 }

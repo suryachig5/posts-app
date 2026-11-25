@@ -11,7 +11,7 @@ export const postsListOptions = queryOptions({
 /** Defines the shared query key and fetcher for the full comment list. */
 export const commentsListOptions = queryOptions({
   queryKey: ['comments', 'list'],
-  queryFn: fetchComments,
+  queryFn: () => fetchComments(undefined),
 })
 
 function groupCommentsByPostId(comments: Comment[]) {

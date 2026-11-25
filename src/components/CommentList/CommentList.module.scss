@@ -1,0 +1,42 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.comment {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--lane);
+}
+.comment:last-child {
+  border-bottom: none;
+}
+.comment:first-child {
+  padding-block-start: 0;
+}
+.title {
+  font-size: 1.08rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+.email {
+  margin-top: var(--space-1);
+  font-size: 0.875rem;
+}
+.body {
+  margin-top: var(--space-2);
+  max-width: 66ch;
+  white-space: pre-line;
+}
