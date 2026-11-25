@@ -1,0 +1,26 @@
+.button {
+  min-width: var(--touch);
+  min-height: var(--touch);
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 0.65rem;
+  background: transparent;
+  color: var(--accent);
+}
+.button {
+  flex: 0 0 var(--touch);
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  color: var(--muted);
+}
+.selected {
+  color: var(--favorite);
+}
+@media (hover: hover) and (pointer: fine) {
+  .button:not(.selected):hover {
+    background: var(--favorite-soft);
+    color: var(--favorite);
+  }
+}

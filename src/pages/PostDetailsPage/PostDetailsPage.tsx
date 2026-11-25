@@ -7,6 +7,7 @@ import { isNotFound } from '../../api/posts'
 import type { Post } from '../../api/posts'
 import { CommentList } from '../../components/CommentList/CommentList'
 import { CommentListSkeleton } from '../../components/LoadingSkeletons/CommentListSkeleton'
+import { FavoriteButton } from '../../components/FavoriteButton/FavoriteButton'
 import { RetryNotice } from '../../components/RetryNotice/RetryNotice'
 import { usePostDetails } from '../../hooks/usePostDetails'
 import { PostDetailsLayout } from './PostDetailsLayout'
@@ -54,12 +55,13 @@ function renderDetails(details: ReturnType<typeof usePostDetails>) {
 }
 
 function PostArticle({ post }: PostArticleProps) {
-  const { title, body } = post
+  const { id, title, body } = post
 
   return (
     <article className={classNames(postCardStyles.card, styles.card)}>
       <div className={postCardStyles.heading}>
         <h1>{title}</h1>
+        <FavoriteButton postId={id} title={title} />
       </div>
       <p className={classNames(styles.body, postCardStyles.body)}>{body}</p>
     </article>

@@ -2,6 +2,7 @@ import styles from './PostCard.module.scss'
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Post } from '../../api/posts'
+import { FavoriteButton } from '../FavoriteButton/FavoriteButton'
 import { CommentCount } from '../CommentCount/CommentCount'
 
 /** Data used by both post card variants. */
@@ -24,6 +25,7 @@ export function PostCard(props: PostCardProps) {
             {title}
           </Link>
         </h3>
+        <FavoriteButton postId={id} title={title} />
       </div>
       <p className={styles.body}>{body}</p>
       <div className={styles.footer}>

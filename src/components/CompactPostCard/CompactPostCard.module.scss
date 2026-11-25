@@ -1,0 +1,21 @@
+article.card {
+  scroll-snap-align: start;
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.card h3 {
+  min-width: 0;
+  min-block-size: 3lh;
+  font-size: 1.17rem;
+}
+.card .footer {
+  margin-top: var(--space-2);
+}
+.title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}

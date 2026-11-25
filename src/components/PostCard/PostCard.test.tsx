@@ -1,20 +1,41 @@
-import { expect, it } from '@jest/globals'
-import { render, screen, within } from '@testing-library/react'
+import postCardStyles from './PostCard.module.scss'
+import loadingSkeletonsStyles from '../LoadingSkeletons/LoadingSkeletons.module.scss'
+import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { firstPost } from '../../test/mockData'
+import { beforeEach, expect, it } from '@jest/globals'
+import { PostCardSkeleton } from '../LoadingSkeletons/PostCardSkeleton'
 import { PostCard } from './PostCard'
+import { useFavorites } from '../../store/favorites'
+import { firstPost } from '../../test/mockData'
 
-it('should show the post title, body, and comment count in the card', () => {
-  render(
-    <PostCard post={firstPost} commentCount={3} commentsFailed={false} />,
-    { wrapper: MemoryRouter },
-  )
+beforeEach(() => {
+  useFavorites.setState({ favoriteIds: [] })
+})
 
-  const card = within(screen.getByRole('article'))
-  expect(card.getByRole('heading', { name: firstPost.title })).toBeTruthy()
+it('should show the post link, body, and comment count', () => {
+  render(<PostCard post={firstPost} commentCount={1} />, {
+    wrapper: MemoryRouter,
+  })
   expect(
-    card.getByRole('link', { name: firstPost.title }).getAttribute('href'),
+    screen.getByRole('link', { name: firstPost.title }).getAttribute('href'),
   ).toBe('/posts/1')
-  expect(card.getByText(firstPost.body)).toBeTruthy()
-  expect(card.getByText('3 comments')).toBeTruthy()
+  expect(screen.getByText(firstPost.body)).toBeTruthy()
+  expect(screen.getByText('1 comment')).toBeTruthy()
+})
+
+it('should distinguish loading and failed counts and hide the decorative card skeleton', () => {
+  const { rerender, container } = render(<PostCard post={firstPost} />, {
+    wrapper: MemoryRouter,
+  })
+  expect(screen.getByLabelText('Loading comment count')).toBeTruthy()
+  expect(
+    container.querySelector(
+      `.${loadingSkeletonsStyles.icon}.${loadingSkeletonsStyles.shimmer}`,
+    ),
+  ).toBeTruthy()
+  expect(container.querySelector(`.${postCardStyles.count} svg`)).toBeNull()
+  rerender(<PostCard post={firstPost} commentsFailed />)
+  expect(container.querySelector(`.${postCardStyles.count}`)).toBeNull()
+  rerender(<PostCardSkeleton />)
+  expect(container.firstElementChild?.getAttribute('aria-hidden')).toBe('true')
 })

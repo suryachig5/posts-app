@@ -1,18 +1,49 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
 .heading {
   margin-bottom: var(--space-5);
 }
-.list {
-  display: grid;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
 .marker {
   height: 1px;
   margin-bottom: -1px;
 }
-.list :is(a, button) {
+.favorites {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--lane);
+  margin-bottom: var(--space-6);
+}
+.cards {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(82%, 16rem);
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding: var(--space-1);
+  scroll-snap-type: x mandatory;
+}
+.list :is(a, button),
+.favorites :is(a, button) {
   scroll-margin-top: 5rem;
+}
+@media (width < 40rem) {
+  .cards:has(> :only-child) {
+    grid-auto-columns: 100%;
+  }
+}
+@media (width >= 40rem) {
+  .favorites {
+    padding: var(--space-5);
+  }
+}
+@media (width >= 55rem) {
+  .cards {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

@@ -19,6 +19,7 @@ export function PostDetailsSkeleton() {
             <span className={styles.shimmer} />
             <span className={styles.shimmer} />
           </h1>
+          <span className={classNames(styles.shimmer, styles.heart)} />
         </div>
         <div
           className={classNames(

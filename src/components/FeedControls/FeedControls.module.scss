@@ -21,7 +21,35 @@
 .title {
   display: none;
 }
-@media (min-width: 40rem) {
+.filters {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex-shrink: 0;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.filters::before {
+  content: '';
+  position: absolute;
+  inset: var(--space-1) auto var(--space-1) var(--space-1);
+  width: calc((100% - 3 * var(--space-1)) / 2);
+  border-radius: 0.25rem;
+  background: var(--accent-soft);
+  pointer-events: none;
+}
+.filters[data-favorites-only='true']::before {
+  transform: translateX(calc(100% + var(--space-1)));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .filters::before {
+    transition: transform 200ms ease;
+  }
+}
+@media (width >= 40rem) {
   .title {
     display: block;
     align-self: center;
@@ -40,7 +68,7 @@
     transform: translateY(0);
   }
 }
-@media (min-width: 40rem) and (prefers-reduced-motion: no-preference) {
+@media (width >= 40rem) and (prefers-reduced-motion: no-preference) {
   .title {
     transition:
       width 180ms ease,

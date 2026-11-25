@@ -1,19 +1,32 @@
-import { expect, it, jest } from '@jest/globals'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { expect, it, jest } from '@jest/globals'
 import { FeedControls } from './FeedControls'
 
-it('should forward search input and reflect the sticky toolbar state', async () => {
+it('should forward search, clear, and filter changes from the feed controls', async () => {
   const user = userEvent.setup()
   const onSearch = jest.fn()
+  const onChangeFilter = jest.fn()
   render(
-    <FeedControls showCompactTitle pinned search="apple" onSearch={onSearch} />,
+    <FeedControls
+      showCompactTitle
+      pinned
+      search="apple"
+      favoritesOnly={false}
+      onSearch={onSearch}
+      onChangeFilter={onChangeFilter}
+    />,
   )
-
-  const toolbar = screen.getByRole('search').parentElement
-  expect(toolbar?.dataset.pinned).toBe('true')
-  expect(toolbar?.dataset.compactTitle).toBe('true')
-
+  fireEvent.change(screen.getByRole('searchbox'), {
+    target: { value: 'orange' },
+  })
+  expect(onSearch).toHaveBeenLastCalledWith('orange')
   await user.click(screen.getByRole('button', { name: 'Clear search' }))
-  expect(onSearch).toHaveBeenCalledWith('')
+  expect(onSearch).toHaveBeenLastCalledWith('')
+  await user.click(screen.getByRole('button', { name: 'Favorites' }))
+  expect(onChangeFilter).toHaveBeenLastCalledWith(true)
+  await user.click(
+    screen.getByRole('button', { name: 'All posts', pressed: true }),
+  )
+  expect(onChangeFilter).toHaveBeenLastCalledWith(false)
 })
