@@ -1,10 +1,11 @@
+import { PostsPage } from './pages/PostsPage/PostsPage'
 import styles from './App.module.scss'
 
-/** Renders the initial Posts App screen. */
+/** Renders the application shell. */
 export function App() {
   return (
     <main className={styles.main}>
-      <h1>Posts App</h1>
+      <PostsPage />
     </main>
   )
 }

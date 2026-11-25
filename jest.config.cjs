@@ -14,6 +14,8 @@ module.exports = {
   },
   moduleNameMapper: {
     '\\.module\\.scss$': '<rootDir>/src/test/styleModuleMock.cjs',
+    '[.]scss$': '<rootDir>/src/test/styleMock.cjs',
+    '^@fontsource-variable/': '<rootDir>/src/test/styleMock.cjs',
   },
   collectCoverageFrom: ['src/**/*.{ts,tsx}', '!src/**/*.test.{ts,tsx}'],
 }

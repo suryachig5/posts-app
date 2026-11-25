@@ -1,6 +1,6 @@
 # Posts App
 
-Initial React and TypeScript scaffold using Vite, TanStack Query, and Zustand.
+A React and TypeScript app that displays posts and comment counts from JSONPlaceholder. Axios handles HTTP requests, and TanStack Query fetches and caches the posts and comments independently.
 
 ```sh
 npm ci

@@ -1,0 +1,10 @@
+.notice {
+  margin-bottom: var(--space-3);
+}
+
+.notice .button {
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  vertical-align: baseline;
+}

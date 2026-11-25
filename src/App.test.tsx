@@ -1,11 +1,15 @@
-import { expect, it } from '@jest/globals'
-import { render, screen } from '@testing-library/react'
+import { expect, it, jest } from '@jest/globals'
+import { render, screen, within } from '@testing-library/react'
 import { App } from './App'
 
-it('should render the Posts App heading', () => {
+jest.mock('./pages/PostsPage/PostsPage', () => ({
+  PostsPage: () => <h1>Posts</h1>,
+}))
+
+it('should render the posts page inside the main landmark', () => {
   render(<App />)
 
   expect(
-    screen.getByRole('heading', { level: 1, name: 'Posts App' }),
+    within(screen.getByRole('main')).getByRole('heading', { name: 'Posts' }),
   ).toBeTruthy()
 })

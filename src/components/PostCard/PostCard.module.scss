@@ -1,0 +1,24 @@
+.card {
+  min-width: 0;
+  padding: var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+}
+.title {
+  margin: 0;
+  font-size: clamp(1.38rem, 3vw, 1.85rem);
+  line-height: 1.15;
+  font-weight: 650;
+}
+.body {
+  margin: var(--space-3) 0 0;
+  color: var(--muted);
+}
+.footer {
+  margin-top: var(--space-4);
+  color: var(--accent);
+  font-size: var(--font-size-sm);
+  font-weight: 650;
+}
