@@ -1,4 +1,6 @@
 import axios from 'axios'
+
+import { API_BASE_URL } from '../constants/apiBaseUrl'
 import { API_TIMEOUT_MS } from '../constants/queryTimes'
 
 /** A post returned by the posts API. */
@@ -19,7 +21,7 @@ export interface Comment {
 }
 
 const client = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  baseURL: API_BASE_URL,
   timeout: API_TIMEOUT_MS,
 })
 

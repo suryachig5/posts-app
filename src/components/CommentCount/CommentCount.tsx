@@ -1,5 +1,7 @@
 import { MessageCircle } from 'lucide-react'
+
 import { CommentCountSkeleton } from '../LoadingSkeletons/CommentCountSkeleton'
+
 import styles from './CommentCount.module.scss'
 
 interface CommentCountProps {

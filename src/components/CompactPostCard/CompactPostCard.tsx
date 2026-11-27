@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
+
+import { CommentCount } from '../CommentCount/CommentCount'
 import { FavoriteButton } from '../FavoriteButton/FavoriteButton'
 import type { PostCardProps } from '../PostCard/PostCard'
-import { CommentCount } from '../CommentCount/CommentCount'
+
 import styles from './CompactPostCard.module.scss'
 
 /** Renders a compact post preview for the Favorites lane. */

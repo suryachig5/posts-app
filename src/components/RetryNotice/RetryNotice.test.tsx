@@ -1,11 +1,12 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { expect, it, jest } from '@jest/globals'
+import { expect, it, vi } from 'vitest'
+
 import { RetryNotice } from './RetryNotice'
 
 it('should allow retrying an error and disable the button while retrying', async () => {
   const user = userEvent.setup()
-  const retry = jest.fn()
+  const retry = vi.fn()
   const { rerender } = render(
     <RetryNotice message="Request failed" retry={retry} retrying={false} />,
   )

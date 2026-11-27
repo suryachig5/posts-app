@@ -1,11 +1,12 @@
-import { expect, it, jest } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
 import { SearchField } from './SearchField'
 
 it('should render the labeled searchbox and forward typed input', async () => {
   const user = userEvent.setup()
-  const onChange = jest.fn()
+  const onChange = vi.fn()
   render(
     <SearchField
       label="Search posts"
@@ -28,7 +29,7 @@ it('should render the labeled searchbox and forward typed input', async () => {
 
 it('should request an empty value when cleared and hide the clear button for an empty value', async () => {
   const user = userEvent.setup()
-  const onChange = jest.fn()
+  const onChange = vi.fn()
   const { rerender } = render(
     <SearchField label="Search posts" value="post" onChange={onChange} />,
   )

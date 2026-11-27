@@ -1,7 +1,9 @@
 import classNames from 'classnames'
-import styles from './FavoriteButton.module.scss'
 import { Heart } from 'lucide-react'
+
 import { useFavorites } from '../../store/favorites'
+
+import styles from './FavoriteButton.module.scss'
 
 interface FavoriteButtonProps {
   postId: number

@@ -1,6 +1,7 @@
 import { Check, ChevronDown } from 'lucide-react'
-import { useEffect, useId, useRef, useState } from 'react'
 import type { FocusEvent, KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
+
 import styles from './Dropdown.module.scss'
 
 interface DropdownProps {
@@ -21,12 +22,7 @@ export function Dropdown(props: DropdownProps) {
   useEffect(watchOutsideClicks, [open])
 
   return (
-    <div
-      className={styles.dropdown}
-      ref={root}
-      onBlur={handleBlur}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={styles.dropdown} ref={root} onBlur={handleBlur}>
       <button
         type="button"
         className={styles.trigger}
@@ -35,6 +31,7 @@ export function Dropdown(props: DropdownProps) {
         aria-expanded={open}
         aria-controls={open ? optionsId : undefined}
         onClick={toggle}
+        onKeyDown={handleKeyDown}
       >
         {selectedLabel ?? label}
         <ChevronDown size={16} aria-hidden />
@@ -51,7 +48,7 @@ export function Dropdown(props: DropdownProps) {
     if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false)
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
     if (!open || event.key !== 'Escape') return
     event.preventDefault()
     closeAndFocusTrigger()
@@ -71,6 +68,7 @@ export function Dropdown(props: DropdownProps) {
           className={styles.option}
           aria-pressed={selected}
           onClick={selectOption}
+          onKeyDown={handleKeyDown}
         >
           {option.label}
           {selected && <Check size={16} aria-hidden />}

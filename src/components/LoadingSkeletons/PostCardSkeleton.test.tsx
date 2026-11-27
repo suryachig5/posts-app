@@ -1,5 +1,6 @@
-import { expect, it } from '@jest/globals'
 import { render } from '@testing-library/react'
+import { expect, it } from 'vitest'
+
 import { PostCardSkeleton } from './PostCardSkeleton'
 
 it('should render a decorative card placeholder hidden from assistive technology', () => {

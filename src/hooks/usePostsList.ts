@@ -1,6 +1,7 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { fetchComments, fetchPosts } from '../api/posts'
+
 import type { Comment } from '../api/posts'
+import { fetchComments, fetchPosts } from '../api/posts'
 
 /** Defines the shared query key and fetcher for the full post list. */
 export const postsListOptions = queryOptions({

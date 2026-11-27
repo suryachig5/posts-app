@@ -1,7 +1,8 @@
-import { expect, it } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { expect, it } from 'vitest'
+
 import { PostDetailsLayout } from './PostDetailsLayout'
 
 it('should render its children and allow returning to the feed while loading', async () => {

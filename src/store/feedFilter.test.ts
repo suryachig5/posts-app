@@ -1,4 +1,5 @@
-import { afterEach, expect, it } from '@jest/globals'
+import { afterEach, expect, it } from 'vitest'
+
 import { useFeedFilter } from './feedFilter'
 
 afterEach(() => useFeedFilter.setState({ search: '' }))

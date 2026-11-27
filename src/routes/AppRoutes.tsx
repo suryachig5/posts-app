@@ -1,10 +1,13 @@
-import styles from './AppRoutes.module.scss'
-import sharedStyles from '../styles/shared.module.scss'
 import { lazy, Suspense, useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
-import { PostDetailsLayout } from '../pages/PostDetailsPage/PostDetailsLayout'
+
+import { ErrorBoundary } from '../components/ErrorBoundary/ErrorBoundary'
 import { PostDetailsSkeleton } from '../components/LoadingSkeletons/PostDetailsSkeleton'
+import { PostDetailsLayout } from '../pages/PostDetailsPage/PostDetailsLayout'
 import { PostsPage } from '../pages/PostsPage/PostsPage'
+
+import sharedStyles from '../styles/shared.module.scss'
+import styles from './AppRoutes.module.scss'
 
 const PostDetailsPage = lazy(
   () => import('../pages/PostDetailsPage/PostDetailsPage'),
@@ -22,11 +25,13 @@ export function AppRoutes() {
         Skip to content
       </a>
       <main id="main-content" tabIndex={-1} className={styles.main}>
-        <Routes>
-          <Route path="/" element={<PostsPage />} />
-          <Route path="/posts/:postId" element={<PostDetailsRoute />} />
-          <Route path="*" element={<NotFoundRoute />} />
-        </Routes>
+        <ErrorBoundary key={pathname}>
+          <Routes>
+            <Route path="/" element={<PostsPage />} />
+            <Route path="/posts/:postId" element={<PostDetailsRoute />} />
+            <Route path="*" element={<NotFoundRoute />} />
+          </Routes>
+        </ErrorBoundary>
       </main>
     </>
   )

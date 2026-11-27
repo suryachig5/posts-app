@@ -1,7 +1,9 @@
+import { UserRound } from 'lucide-react'
+
+import type { Comment } from '../../api/posts'
+
 import sharedStyles from '../../styles/shared.module.scss'
 import styles from './CommentList.module.scss'
-import { UserRound } from 'lucide-react'
-import type { Comment } from '../../api/posts'
 
 interface CommentListProps {
   comments: Comment[]

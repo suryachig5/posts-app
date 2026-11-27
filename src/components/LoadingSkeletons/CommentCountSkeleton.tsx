@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+
 import styles from './LoadingSkeletons.module.scss'
 
 /** Reserves space for a comment icon and count while comments load. */

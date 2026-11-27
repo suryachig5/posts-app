@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react'
-import { expect, it } from '@jest/globals'
-import { CommentList } from './CommentList'
+import { expect, it } from 'vitest'
+
 import { firstComment } from '../../test/mockData'
+import { CommentList } from './CommentList'
 
 it('should show the comment title, email, and body, and handle an empty list', () => {
   const { rerender } = render(<CommentList comments={[firstComment]} />)

@@ -1,5 +1,6 @@
-import styles from './LoadingSkeletons.module.scss'
 import { PostCardSkeleton } from './PostCardSkeleton'
+
+import styles from './LoadingSkeletons.module.scss'
 
 /** Shows three card placeholders while the initial feed loads. */
 export function PostListSkeleton() {

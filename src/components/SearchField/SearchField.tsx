@@ -1,5 +1,6 @@
-import type { ChangeEvent } from 'react'
 import { Search, X } from 'lucide-react'
+import type { ChangeEvent } from 'react'
+
 import styles from './SearchField.module.scss'
 
 interface SearchFieldProps {

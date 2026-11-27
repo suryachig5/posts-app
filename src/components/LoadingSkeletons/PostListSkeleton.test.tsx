@@ -1,5 +1,6 @@
-import { expect, it } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
+import { expect, it } from 'vitest'
+
 import { PostListSkeleton } from './PostListSkeleton'
 
 it('should announce that posts are loading and render three placeholders', () => {

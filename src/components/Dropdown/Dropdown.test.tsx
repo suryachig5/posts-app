@@ -1,11 +1,12 @@
-import { expect, it, jest } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
 import { Dropdown } from './Dropdown'
 
 it('should open, select an option, and return focus using the keyboard', async () => {
   const user = userEvent.setup()
-  const onChange = jest.fn()
+  const onChange = vi.fn()
   render(
     <Dropdown
       label="Filter"
@@ -41,7 +42,7 @@ it('should close on Escape or an outside click', async () => {
         label="Filter"
         value="one"
         options={[{ label: 'One', value: 'one' }]}
-        onChange={jest.fn()}
+        onChange={vi.fn()}
       />
       <button type="button">Outside</button>
     </>,
@@ -65,7 +66,7 @@ it('should display the filter label when the selected value is unavailable', () 
       label="Filter"
       value="removed"
       options={[{ label: 'One', value: 'one' }]}
-      onChange={jest.fn()}
+      onChange={vi.fn()}
     />,
   )
 

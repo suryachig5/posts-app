@@ -1,13 +1,14 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { expect, it, jest } from '@jest/globals'
+import { expect, it, vi } from 'vitest'
+
 import { FeedControls } from './FeedControls'
 
 it('should forward search, clear, and filter changes from the feed controls', async () => {
   const user = userEvent.setup()
-  const onChangeUser = jest.fn()
-  const onSearch = jest.fn()
-  const onChangeFilter = jest.fn()
+  const onChangeUser = vi.fn()
+  const onSearch = vi.fn()
+  const onChangeFilter = vi.fn()
   render(
     <FeedControls
       showCompactTitle
@@ -54,11 +55,11 @@ it.each([
         pinned={false}
         userIds={[2]}
         userId={userId}
-        onChangeUser={jest.fn()}
+        onChangeUser={vi.fn()}
         search=""
         favoritesOnly={favoritesOnly}
-        onSearch={jest.fn()}
-        onChangeFilter={jest.fn()}
+        onSearch={vi.fn()}
+        onChangeFilter={vi.fn()}
       />,
     )
 

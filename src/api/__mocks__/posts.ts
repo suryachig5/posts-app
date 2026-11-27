@@ -1,8 +1,8 @@
-import { jest } from '@jest/globals'
+import { vi } from 'vitest'
 
-const actual = jest.requireActual<typeof import('../posts')>('../posts')
+const actual = await vi.importActual<typeof import('../posts')>('../posts')
 
 export const isNotFound = actual.isNotFound
-export const fetchPosts = jest.fn<typeof actual.fetchPosts>()
-export const fetchIndividualPost = jest.fn<typeof actual.fetchIndividualPost>()
-export const fetchComments = jest.fn<typeof actual.fetchComments>()
+export const fetchPosts = vi.fn<typeof actual.fetchPosts>()
+export const fetchIndividualPost = vi.fn<typeof actual.fetchIndividualPost>()
+export const fetchComments = vi.fn<typeof actual.fetchComments>()

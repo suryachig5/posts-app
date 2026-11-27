@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+
 import { fetchComments, fetchIndividualPost } from '../api/posts'
 import { commentsListOptions, postsListOptions } from './usePostsList'
 

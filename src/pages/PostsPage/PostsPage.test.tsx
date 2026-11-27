@@ -1,8 +1,8 @@
-import postsPageStyles from './PostsPage.module.scss'
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { beforeEach, expect, it, jest } from '@jest/globals'
+import { beforeEach, expect, it, vi } from 'vitest'
+
 import { fetchComments, fetchPosts } from '../../api/posts'
 import { useFavorites } from '../../store/favorites'
 import { useFeedFilter } from '../../store/feedFilter'
@@ -10,12 +10,14 @@ import { firstComment, firstPost, secondPost } from '../../test/mockData'
 import { createQueryHarness } from '../../test/queryHarness'
 import { PostsPage } from './PostsPage'
 
-jest.mock('../../api/posts')
+import postsPageStyles from './PostsPage.module.scss'
+
+vi.mock('../../api/posts')
 
 beforeEach(() => {
-  jest.resetAllMocks()
-  jest.mocked(fetchPosts).mockResolvedValue([firstPost, secondPost])
-  jest.mocked(fetchComments).mockResolvedValue([firstComment])
+  vi.resetAllMocks()
+  vi.mocked(fetchPosts).mockResolvedValue([firstPost, secondPost])
+  vi.mocked(fetchComments).mockResolvedValue([firstComment])
   useFavorites.setState({ favoriteIds: [] })
   useFeedFilter.setState({ search: '', favoritesOnly: false, userId: null })
 })
@@ -58,7 +60,7 @@ it('should show up to four favorites and switch to the complete saved list', asy
     id: i + 1,
     title: `Saved post ${i + 1}`,
   }))
-  jest.mocked(fetchPosts).mockResolvedValue(posts)
+  vi.mocked(fetchPosts).mockResolvedValue(posts)
   useFavorites.setState({ favoriteIds: [1, 2, 3, 4, 5] })
   renderFeed()
   const preview = await screen.findByRole('region', { name: 'Favorites (5)' })
@@ -81,8 +83,7 @@ it('should show a saved-list empty state when there are no favorites', async () 
 
 it('should retry a failed post request and handle an empty feed', async () => {
   const user = userEvent.setup()
-  jest
-    .mocked(fetchPosts)
+  vi.mocked(fetchPosts)
     .mockRejectedValueOnce(new Error('Oops'))
     .mockResolvedValue([])
   renderFeed()
@@ -93,7 +94,7 @@ it('should retry a failed post request and handle an empty feed', async () => {
 
 it('should keep posts visible and retry when only comment counts fail', async () => {
   const user = userEvent.setup()
-  jest.mocked(fetchComments).mockRejectedValueOnce(new Error('Oops'))
+  vi.mocked(fetchComments).mockRejectedValueOnce(new Error('Oops'))
   renderFeed()
   expect(await screen.findByText('We couldn’t load comments.')).toBeTruthy()
   expect(screen.getByRole('link', { name: firstPost.title })).toBeTruthy()
@@ -103,7 +104,7 @@ it('should keep posts visible and retry when only comment counts fail', async ()
 
 it('should update the sticky toolbar when the heading and marker scroll away', async () => {
   let onIntersection: IntersectionObserverCallback
-  const disconnect = jest.fn()
+  const disconnect = vi.fn()
   class Observer {
     constructor(callback: IntersectionObserverCallback) {
       onIntersection = callback
@@ -150,9 +151,10 @@ it('should update the sticky toolbar when the heading and marker scroll away', a
 
 it('should offer only users with saved posts in Favorites', async () => {
   const user = userEvent.setup()
-  jest
-    .mocked(fetchPosts)
-    .mockResolvedValue([firstPost, { ...secondPost, userId: 2 }])
+  vi.mocked(fetchPosts).mockResolvedValue([
+    firstPost,
+    { ...secondPost, userId: 2 },
+  ])
   useFavorites.setState({ favoriteIds: [firstPost.id] })
   useFeedFilter.setState({ userId: 2 })
   renderFeed()
@@ -204,10 +206,10 @@ it('should return to results below the toolbar without moving focus as search co
   const toolbar = screen.getByRole('search').parentElement!
   const results = screen.getByRole('region', { name: 'All posts' })
   Object.defineProperty(toolbar, 'offsetHeight', { value: 80 })
-  const bounds = jest
+  const bounds = vi
     .spyOn(results, 'getBoundingClientRect')
     .mockReturnValue(new DOMRect(0, 30))
-  const scrollTo = jest.mocked(window.scrollTo)
+  const scrollTo = vi.mocked(window.scrollTo)
   scrollTo.mockClear()
 
   await user.type(search, 'a')

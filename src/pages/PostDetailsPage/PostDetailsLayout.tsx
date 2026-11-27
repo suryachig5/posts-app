@@ -1,8 +1,9 @@
-import styles from './PostDetailsLayout.module.scss'
-import sharedStyles from '../../styles/shared.module.scss'
-import type { PropsWithChildren } from 'react'
 import { ArrowLeft } from 'lucide-react'
+import type { PropsWithChildren } from 'react'
 import { Link } from 'react-router-dom'
+
+import sharedStyles from '../../styles/shared.module.scss'
+import styles from './PostDetailsLayout.module.scss'
 
 /** Keeps the detail layout and back navigation available while loading. */
 export function PostDetailsLayout({ children }: PropsWithChildren) {

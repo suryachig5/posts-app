@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import type { ReactNode } from 'react'
+
 import styles from './FilterButton.module.scss'
 
 interface FilterButtonProps {

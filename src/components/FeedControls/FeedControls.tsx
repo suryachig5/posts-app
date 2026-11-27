@@ -1,9 +1,11 @@
-import styles from './FeedControls.module.scss'
-import type { Ref } from 'react'
 import { Heart, LayoutList } from 'lucide-react'
+import type { Ref } from 'react'
+
 import { Dropdown } from '../Dropdown/Dropdown'
 import { FilterButton } from '../FilterButton/FilterButton'
 import { SearchField } from '../SearchField/SearchField'
+
+import styles from './FeedControls.module.scss'
 
 interface FeedControlsProps {
   controlsRef?: Ref<HTMLDivElement>

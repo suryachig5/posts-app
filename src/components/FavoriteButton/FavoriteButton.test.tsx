@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, expect, it } from '@jest/globals'
-import { FavoriteButton } from './FavoriteButton'
+import { beforeEach, expect, it } from 'vitest'
+
 import { useFavorites } from '../../store/favorites'
 import { firstPost } from '../../test/mockData'
+import { FavoriteButton } from './FavoriteButton'
 
 beforeEach(() => {
   useFavorites.setState({ favoriteIds: [] })

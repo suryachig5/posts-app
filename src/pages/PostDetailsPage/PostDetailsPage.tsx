@@ -1,17 +1,19 @@
 import classNames from 'classnames'
+import { useNavigate, useParams } from 'react-router-dom'
+
+import type { Post } from '../../api/posts'
+import { isNotFound } from '../../api/posts'
+import { CommentList } from '../../components/CommentList/CommentList'
+import { FavoriteButton } from '../../components/FavoriteButton/FavoriteButton'
+import { CommentListSkeleton } from '../../components/LoadingSkeletons/CommentListSkeleton'
+import { PostDetailsSkeleton } from '../../components/LoadingSkeletons/PostDetailsSkeleton'
+import { RetryNotice } from '../../components/RetryNotice/RetryNotice'
+import { usePostDetails } from '../../hooks/usePostDetails'
+import { useFeedFilter } from '../../store/feedFilter'
+import { PostDetailsLayout } from './PostDetailsLayout'
+
 import sharedStyles from '../../styles/shared.module.scss'
 import styles from './PostDetailsPage.module.scss'
-import { useNavigate, useParams } from 'react-router-dom'
-import { isNotFound } from '../../api/posts'
-import type { Post } from '../../api/posts'
-import { CommentList } from '../../components/CommentList/CommentList'
-import { CommentListSkeleton } from '../../components/LoadingSkeletons/CommentListSkeleton'
-import { FavoriteButton } from '../../components/FavoriteButton/FavoriteButton'
-import { RetryNotice } from '../../components/RetryNotice/RetryNotice'
-import { useFeedFilter } from '../../store/feedFilter'
-import { usePostDetails } from '../../hooks/usePostDetails'
-import { PostDetailsLayout } from './PostDetailsLayout'
-import { PostDetailsSkeleton } from '../../components/LoadingSkeletons/PostDetailsSkeleton'
 
 interface PostArticleProps {
   post: Post

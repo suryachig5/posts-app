@@ -1,5 +1,6 @@
-import { expect, it } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
+import { expect, it } from 'vitest'
+
 import { CommentListSkeleton } from './CommentListSkeleton'
 
 it('should announce "Loading comments" while the content loads', () => {

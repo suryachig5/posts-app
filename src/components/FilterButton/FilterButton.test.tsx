@@ -1,13 +1,14 @@
-import { expect, it, jest } from '@jest/globals'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { expect, it, vi } from 'vitest'
+
 import { FilterButton } from './FilterButton'
 
 it('should render the label and decorative icon and reflect the selected state', () => {
   const props = {
     text: 'Favorites',
     icon: <span>Heart</span>,
-    onClick: jest.fn(),
+    onClick: vi.fn(),
   }
   const { rerender } = render(<FilterButton {...props} selected={false} />)
 
@@ -28,7 +29,7 @@ it('should render the label and decorative icon and reflect the selected state',
 
 it('should invoke the click handler when activated', async () => {
   const user = userEvent.setup()
-  const onClick = jest.fn()
+  const onClick = vi.fn()
   render(
     <FilterButton
       text="Favorites"

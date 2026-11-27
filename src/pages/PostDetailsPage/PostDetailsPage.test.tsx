@@ -1,21 +1,22 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { beforeEach, expect, it, jest } from '@jest/globals'
+import { beforeEach, expect, it, vi } from 'vitest'
+
 import { fetchComments, fetchIndividualPost, fetchPosts } from '../../api/posts'
+import { useFeedFilter } from '../../store/feedFilter'
 import { firstComment, firstPost, secondPost } from '../../test/mockData'
 import { createQueryHarness } from '../../test/queryHarness'
-import { useFeedFilter } from '../../store/feedFilter'
 import { PostsPage } from '../PostsPage/PostsPage'
 import PostDetailsPage from './PostDetailsPage'
 
-jest.mock('../../api/posts')
+vi.mock('../../api/posts')
 
 beforeEach(() => {
-  jest.resetAllMocks()
+  vi.resetAllMocks()
   useFeedFilter.setState({ userId: null, search: '', favoritesOnly: false })
-  jest.mocked(fetchIndividualPost).mockResolvedValue(firstPost)
-  jest.mocked(fetchComments).mockResolvedValue([firstComment])
+  vi.mocked(fetchIndividualPost).mockResolvedValue(firstPost)
+  vi.mocked(fetchComments).mockResolvedValue([firstComment])
 })
 
 function renderDetails(path = '/posts/1') {
@@ -70,9 +71,10 @@ it('should show a not-found view for invalid IDs without calling the API', () =>
 })
 
 it('should show a not-found view when the post API returns a 404', async () => {
-  jest
-    .mocked(fetchIndividualPost)
-    .mockRejectedValue({ isAxiosError: true, response: { status: 404 } })
+  vi.mocked(fetchIndividualPost).mockRejectedValue({
+    isAxiosError: true,
+    response: { status: 404 },
+  })
   renderDetails()
   expect(
     await screen.findByRole('heading', { name: 'Post not found' }),
@@ -81,7 +83,7 @@ it('should show a not-found view when the post API returns a 404', async () => {
 
 it('should retry a failed post request', async () => {
   const user = userEvent.setup()
-  jest.mocked(fetchIndividualPost).mockRejectedValueOnce(new Error('Offline'))
+  vi.mocked(fetchIndividualPost).mockRejectedValueOnce(new Error('Offline'))
   renderDetails()
   expect(await screen.findByText('We couldn’t load this post.')).toBeTruthy()
   expect(
@@ -95,8 +97,7 @@ it('should retry a failed post request', async () => {
 
 it('should retry failed comments while keeping the post visible', async () => {
   const user = userEvent.setup()
-  jest
-    .mocked(fetchComments)
+  vi.mocked(fetchComments)
     .mockRejectedValueOnce(new Error('Offline'))
     .mockResolvedValue([])
   renderDetails()
@@ -107,7 +108,7 @@ it('should retry failed comments while keeping the post visible', async () => {
 })
 
 it('should show the post while comments are still loading', async () => {
-  jest.mocked(fetchComments).mockImplementation(() => new Promise(() => {}))
+  vi.mocked(fetchComments).mockImplementation(() => new Promise(() => {}))
   renderDetails()
   expect(
     await screen.findByRole('heading', { name: firstPost.title }),
@@ -117,9 +118,10 @@ it('should show the post while comments are still loading', async () => {
 
 it('should open the feed filtered to the post author and allow clearing the filter', async () => {
   const user = userEvent.setup()
-  jest
-    .mocked(fetchPosts)
-    .mockResolvedValue([firstPost, { ...secondPost, userId: 2 }])
+  vi.mocked(fetchPosts).mockResolvedValue([
+    firstPost,
+    { ...secondPost, userId: 2 },
+  ])
   useFeedFilter.setState({ search: 'unrelated', favoritesOnly: true })
   renderDetails()
 

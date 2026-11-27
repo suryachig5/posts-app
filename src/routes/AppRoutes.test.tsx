@@ -1,13 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { expect, it, jest } from '@jest/globals'
+import { expect, it, vi } from 'vitest'
+
 import { AppRoutes } from './AppRoutes'
 
-jest.mock('../pages/PostsPage/PostsPage', () => ({
+vi.mock('../pages/PostsPage/PostsPage', () => ({
   PostsPage: () => <h1>Feed</h1>,
 }))
-jest.mock('../pages/PostDetailsPage/PostDetailsPage', () => ({
+vi.mock('../pages/PostDetailsPage/PostDetailsPage', () => ({
   __esModule: true,
   default: () => <h1>Details</h1>,
 }))

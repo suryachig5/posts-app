@@ -1,26 +1,39 @@
-import { describe, expect, it, jest } from '@jest/globals'
+import { describe, expect, it, vi } from 'vitest'
+
+import { firstComment, firstPost } from '../test/mockData'
 import {
   fetchComments,
   fetchIndividualPost,
   fetchPosts,
   isNotFound,
 } from './posts'
-import { firstComment, firstPost } from '../test/mockData'
 
-const mockGet = jest.fn<(...args: unknown[]) => Promise<unknown>>()
+const { mockCreate, mockGet } = vi.hoisted(() => {
+  const mockGet = vi.fn<(...args: unknown[]) => Promise<unknown>>()
+  const mockCreate = vi.fn(() => ({ get: mockGet }))
+  return { mockCreate, mockGet }
+})
 
-jest.mock('axios', () => {
-  const axios = jest.requireActual<typeof import('axios')>('axios').default
+vi.mock('axios', async () => {
+  const axios = (await vi.importActual<typeof import('axios')>('axios')).default
   return {
     __esModule: true,
     default: {
       ...axios,
-      create: () => ({ get: (...args: unknown[]) => mockGet(...args) }),
+      create: mockCreate,
     },
   }
 })
 
 describe('posts API', () => {
+  it('should target JSONPlaceholder', () => {
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        baseURL: 'https://jsonplaceholder.typicode.com',
+      }),
+    )
+  })
+
   it('should return the post list response body', async () => {
     mockGet.mockResolvedValueOnce({ data: [firstPost] })
     await expect(fetchPosts()).resolves.toEqual([firstPost])

@@ -4,7 +4,7 @@
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/jsdom"],
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
@@ -13,5 +13,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src", "vite.config.ts", "jest.config.ts", "eslint.config.ts"]
+  "include": ["src", "vite.config.ts", "eslint.config.ts"]
 }

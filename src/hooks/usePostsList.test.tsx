@@ -1,14 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  jest,
-} from '@jest/globals'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { fetchComments, fetchPosts } from '../api/posts'
-import { usePostsList } from './usePostsList'
 import {
   firstComment,
   firstPost,
@@ -16,11 +9,12 @@ import {
   secondPost,
 } from '../test/mockData'
 import { createQueryHarness } from '../test/queryHarness'
+import { usePostsList } from './usePostsList'
 
-jest.mock('../api/posts')
+vi.mock('../api/posts')
 
-const fetchPostsMock = jest.mocked(fetchPosts)
-const fetchCommentsMock = jest.mocked(fetchComments)
+const fetchPostsMock = vi.mocked(fetchPosts)
+const fetchCommentsMock = vi.mocked(fetchComments)
 
 beforeEach(() => {
   fetchPostsMock.mockResolvedValue([firstPost, secondPost])
@@ -28,7 +22,7 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  jest.resetAllMocks()
+  vi.resetAllMocks()
 })
 
 describe('usePostsList', () => {

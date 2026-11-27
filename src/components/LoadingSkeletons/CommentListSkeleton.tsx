@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+
 import styles from './LoadingSkeletons.module.scss'
 
 /** Reserves rows for comments while a discussion is loading. */

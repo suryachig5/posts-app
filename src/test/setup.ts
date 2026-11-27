@@ -1,15 +1,15 @@
-import { TextDecoder, TextEncoder } from 'node:util'
 import { cleanup } from '@testing-library/react'
-import { afterEach, jest } from '@jest/globals'
+import { afterEach, vi } from 'vitest'
+
+// Use jsdom storage so each test environment has its own favorites.
+vi.stubGlobal('localStorage', jsdom.window.localStorage)
 
 Object.assign(globalThis, {
-  TextDecoder,
-  TextEncoder,
   IntersectionObserver: class {
     observe() {}
     disconnect() {}
   },
-  scrollTo: jest.fn(),
+  scrollTo: vi.fn(),
 })
 
 afterEach(() => {

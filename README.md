@@ -13,7 +13,7 @@ A responsive React and TypeScript feed with post details, comments, search, save
 | Client state                   | Zustand for state management                    |
 | Styling                        | SCSS with shared design tokens and Lucide icons |
 | Build, linting, and formatting | Vite, ESLint, and Prettier                      |
-| Testing                        | Jest, React Testing Library, and jsdom          |
+| Testing                        | Vitest, React Testing Library, and jsdom        |
 
 ## Run locally
 
@@ -28,7 +28,7 @@ npm run dev
 
 ## Source layout
 
-- `routes/` defines the routes along with their loading and fallback views.
+- `routes/` defines routes, loading fallbacks, and an error boundary for unexpected rendering or lazy-loading failures.
 - `pages/` feed and detail screens.
 - `components/` contains shared components that are used to build the pages.
 - `components/LoadingSkeletons/` contains the loading placeholders and shimmer styles.
@@ -53,6 +53,8 @@ Use one top-level JSX return per React component so the layout is easy to unders
 
 ## Tests
 
-Run `npm test` for the Jest suite, `npm run test:watch` while editing, or
-`npm run test:coverage` for a coverage report. Tests live beside the source
-they cover. Shared mock data and test setup live in `src/test/`.
+Vitest runs on the app's own Vite config, so tests use the same React plugin, SCSS module handling and TypeScript pipeline, with no separate Babel setup or style mocks. Components and hooks are tested with React Testing Library and user-event in jsdom.
+
+Run `npm test` once, `npm run test:watch` while editing, or `npm run test:coverage` to enforce 95% global coverage for branches, functions, lines, and statements.
+
+GitHub Actions runs a clean install, formatting, lint, coverage, and the type-checked production build on pull requests and pushes to `main`. ESLint checks React Hooks, JSX accessibility, import ordering, and function complexity.

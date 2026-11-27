@@ -1,5 +1,6 @@
-import { expect, it } from '@jest/globals'
 import { render, screen } from '@testing-library/react'
+import { expect, it } from 'vitest'
+
 import { PostDetailsSkeleton } from './PostDetailsSkeleton'
 
 it('should announce "Loading post" while the content loads', () => {

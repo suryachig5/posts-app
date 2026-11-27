@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
-import { beforeEach, expect, it } from '@jest/globals'
-import { PostCard } from './PostCard'
+import { beforeEach, expect, it } from 'vitest'
+
 import { useFavorites } from '../../store/favorites'
 import { firstPost } from '../../test/mockData'
+import { PostCard } from './PostCard'
 
 beforeEach(() => {
   useFavorites.setState({ favoriteIds: [] })

@@ -1,17 +1,19 @@
-import styles from './PostsPage.module.scss'
-import sharedStyles from '../../styles/shared.module.scss'
 import { ArrowRight, Heart } from 'lucide-react'
 import type { Ref } from 'react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+import type { Post } from '../../api/posts'
+import { CompactPostCard } from '../../components/CompactPostCard/CompactPostCard'
 import { FeedControls } from '../../components/FeedControls/FeedControls'
 import { PostListSkeleton } from '../../components/LoadingSkeletons/PostListSkeleton'
-import { CompactPostCard } from '../../components/CompactPostCard/CompactPostCard'
 import { PostCard } from '../../components/PostCard/PostCard'
 import { RetryNotice } from '../../components/RetryNotice/RetryNotice'
 import { usePostsList } from '../../hooks/usePostsList'
 import { useFavorites } from '../../store/favorites'
 import { useFeedFilter } from '../../store/feedFilter'
-import type { Post } from '../../api/posts'
+
+import sharedStyles from '../../styles/shared.module.scss'
+import styles from './PostsPage.module.scss'
 
 type PostsQuery = ReturnType<typeof usePostsList>['posts']
 type CommentsQuery = ReturnType<typeof usePostsList>['comments']

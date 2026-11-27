@@ -1,7 +1,9 @@
 import classNames from 'classnames'
+
+import { CommentListSkeleton } from './CommentListSkeleton'
+
 import sharedStyles from '../../styles/shared.module.scss'
 import styles from './LoadingSkeletons.module.scss'
-import { CommentListSkeleton } from './CommentListSkeleton'
 
 /** Reserves space for the detail article and discussion while the post loads. */
 export function PostDetailsSkeleton() {

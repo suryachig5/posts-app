@@ -1,10 +1,12 @@
-import sharedStyles from '../../styles/shared.module.scss'
-import styles from './PostCard.module.scss'
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
+
 import type { Post } from '../../api/posts'
-import { FavoriteButton } from '../FavoriteButton/FavoriteButton'
 import { CommentCount } from '../CommentCount/CommentCount'
+import { FavoriteButton } from '../FavoriteButton/FavoriteButton'
+
+import sharedStyles from '../../styles/shared.module.scss'
+import styles from './PostCard.module.scss'
 
 /** Data used by both post card variants. */
 export interface PostCardProps {
