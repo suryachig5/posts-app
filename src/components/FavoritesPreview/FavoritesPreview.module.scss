@@ -3,10 +3,10 @@
   border-radius: var(--radius);
   background: var(--lane);
   margin-bottom: var(--space-6);
-
-  button[aria-hidden='true'] {
-    visibility: hidden;
-  }
+}
+.favorites .heading {
+  min-height: var(--touch);
+  flex-wrap: nowrap;
 }
 .cards {
   display: grid;

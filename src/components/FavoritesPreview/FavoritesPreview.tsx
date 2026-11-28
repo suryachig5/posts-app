@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { ArrowRight, Heart } from 'lucide-react'
 
 import type { Post } from '../../api/posts'
@@ -27,19 +28,19 @@ export function FavoritesPreview(props: FavoritesPreviewProps) {
 
   return (
     <section className={styles.favorites} aria-labelledby="favorites-heading">
-      <div className={sharedStyles.sectionHeading}>
+      <div className={classNames(sharedStyles.sectionHeading, styles.heading)}>
         <h2 id="favorites-heading">
           <Heart size={18} aria-hidden /> Favorites ({favoritePosts.length})
         </h2>
-        <button
-          className={sharedStyles.textButton}
-          type="button"
-          disabled={!canViewAll}
-          aria-hidden={!canViewAll}
-          onClick={showAll}
-        >
-          View all favorites <ArrowRight size={16} aria-hidden />
-        </button>
+        {canViewAll && (
+          <button
+            className={sharedStyles.textButton}
+            type="button"
+            onClick={showAll}
+          >
+            View all favorites <ArrowRight size={16} aria-hidden />
+          </button>
+        )}
       </div>
       <div className={styles.cards}>
         {favoritePosts.slice(0, previewLimit).map((post) => (

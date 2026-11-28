@@ -25,6 +25,11 @@ export interface Comment {
   body: string
 }
 
+interface FetchCommentsOptions {
+  postId?: number
+  signal?: AbortSignal
+}
+
 const client = axios.create({
   baseURL: API_BASE_URL,
   timeout: API_TIMEOUT_MS,
@@ -43,10 +48,10 @@ export async function fetchIndividualPost(postId: number, signal: AbortSignal) {
 }
 
 /** Fetches comments for one post when an ID is supplied, or all comments otherwise. */
-export async function fetchComments(
-  signal: AbortSignal | undefined,
-  postId?: number,
-) {
+export async function fetchComments({
+  postId,
+  signal,
+}: FetchCommentsOptions = {}) {
   const { data } = await client.get<unknown>('/comments', {
     params: { postId },
     signal,

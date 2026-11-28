@@ -49,14 +49,16 @@ describe('posts API', () => {
 
   it('should request all comments or filter by post ID', async () => {
     mockGet.mockResolvedValue({ data: [firstComment] })
-    await expect(fetchComments(undefined)).resolves.toEqual([firstComment])
+    await expect(fetchComments()).resolves.toEqual([firstComment])
     expect(mockGet).toHaveBeenLastCalledWith('/comments', {
       params: { postId: undefined },
       signal: undefined,
     })
 
     const { signal } = new AbortController()
-    await expect(fetchComments(signal, 1)).resolves.toEqual([firstComment])
+    await expect(fetchComments({ postId: 1, signal })).resolves.toEqual([
+      firstComment,
+    ])
     expect(mockGet).toHaveBeenLastCalledWith('/comments', {
       params: { postId: 1 },
       signal,

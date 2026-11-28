@@ -47,7 +47,7 @@ describe('usePostsList', () => {
         ]),
       ),
     )
-    expect(fetchCommentsMock).toHaveBeenCalledWith(undefined)
+    expect(fetchCommentsMock).toHaveBeenCalledWith()
   })
 
   it('should keep posts available when comments fail', async () => {

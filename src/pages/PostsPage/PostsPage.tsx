@@ -106,11 +106,11 @@ export function PostsPage() {
     </>
   )
 
-  function showAllFavorites() {
-    setFavoritesOnly(true)
-  }
-
   function getCommentCount(postId: number) {
     return comments.data ? (comments.data.get(postId)?.length ?? 0) : undefined
+  }
+
+  function showAllFavorites() {
+    setFavoritesOnly(true)
   }
 }

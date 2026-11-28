@@ -30,13 +30,19 @@ interface PostCommentsProps {
 export default function PostDetailsPage() {
   const { postId = '' } = useParams()
   const parsedId = postId.trim() === '' ? NaN : Number(postId)
-  const details = usePostDetails(parsedId)
-
-  return <PostDetailsLayout>{renderDetails(details)}</PostDetailsLayout>
+  return (
+    <PostDetailsLayout>
+      <PostDetailsContent postId={parsedId} />
+    </PostDetailsLayout>
+  )
 }
 
-function renderDetails(details: ReturnType<typeof usePostDetails>) {
-  const { post: postQuery, comments: commentsQuery, enabled } = details
+function PostDetailsContent({ postId }: { postId: number }) {
+  const {
+    post: postQuery,
+    comments: commentsQuery,
+    enabled,
+  } = usePostDetails(postId)
   const { data: post, error, isPending, isFetching, refetch } = postQuery
 
   if (!enabled || (!post && isNotFound(error))) return <h1>Post not found</h1>
@@ -109,12 +115,12 @@ function PostComments(props: PostCommentsProps) {
           </span>
         )}
       </div>
-      {renderComments(props)}
+      <PostCommentsContent {...props} />
     </section>
   )
 }
 
-function renderComments(props: PostCommentsProps) {
+function PostCommentsContent(props: PostCommentsProps) {
   const { comments, failed, retrying, retry } = props
   if (!comments && failed) {
     return (

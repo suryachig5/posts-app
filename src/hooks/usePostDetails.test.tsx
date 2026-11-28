@@ -52,7 +52,10 @@ describe('usePostDetails', () => {
     )
     expect(result.current.post.data).toEqual(firstPost)
     expect(fetchPostMock).toHaveBeenCalledWith(1, expect.any(AbortSignal))
-    expect(fetchCommentsMock).toHaveBeenCalledWith(expect.any(AbortSignal), 1)
+    expect(fetchCommentsMock).toHaveBeenCalledWith({
+      postId: 1,
+      signal: expect.any(AbortSignal),
+    })
     expect(fetchPostsMock).not.toHaveBeenCalled()
   })
 

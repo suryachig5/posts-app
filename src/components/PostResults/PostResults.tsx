@@ -26,6 +26,14 @@ interface PostResultsProps {
   normalizedSearchValue: string
 }
 
+interface PostResultsListProps {
+  posts: Post[]
+  getCommentCount: PostResultsProps['getCommentCount']
+  commentsFailed: boolean
+  normalizedSearchValue: string
+  favoritesOnly: boolean
+}
+
 /**
  * Shows the post cards and result count. Shows placeholders while posts load,
  * a message when there are no results, and a retry button if a request fails.
@@ -82,14 +90,15 @@ export function PostResults(props: PostResultsProps) {
           retrying={retryPosts.pending}
         />
       )}
-      {visiblePosts &&
-        renderPostResults(
-          visiblePosts,
-          getCommentCount,
-          commentsFailed,
-          normalizedSearchValue,
-          favoritesOnly,
-        )}
+      {visiblePosts && (
+        <PostResultsList
+          posts={visiblePosts}
+          getCommentCount={getCommentCount}
+          commentsFailed={commentsFailed}
+          normalizedSearchValue={normalizedSearchValue}
+          favoritesOnly={favoritesOnly}
+        />
+      )}
     </section>
   )
 }
@@ -108,13 +117,14 @@ function getFeedHeading(favoritesOnly: boolean, userId: number | null) {
   return heading
 }
 
-function renderPostResults(
-  posts: Post[],
-  getCommentCount: PostResultsProps['getCommentCount'],
-  commentsFailed: boolean,
-  normalizedSearchValue: string,
-  favoritesOnly: boolean,
-) {
+function PostResultsList(props: PostResultsListProps) {
+  const {
+    posts,
+    getCommentCount,
+    commentsFailed,
+    normalizedSearchValue,
+    favoritesOnly,
+  } = props
   if (!posts.length) {
     return (
       <p className={sharedStyles.statusPanel}>

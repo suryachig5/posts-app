@@ -60,7 +60,10 @@ it.each([0, -2, 1.5])(
       id,
       expect.any(AbortSignal),
     )
-    expect(fetchComments).toHaveBeenCalledWith(expect.any(AbortSignal), id)
+    expect(fetchComments).toHaveBeenCalledWith({
+      postId: id,
+      signal: expect.any(AbortSignal),
+    })
   },
 )
 

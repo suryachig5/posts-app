@@ -11,6 +11,13 @@ interface DropdownProps {
   onChange: (value: string) => void
 }
 
+interface DropdownOptionProps {
+  option: DropdownProps['options'][number]
+  selected: boolean
+  onSelect: (value: string) => void
+  onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void
+}
+
 /** Displays an inline picker for a single value. */
 export function Dropdown(props: DropdownProps) {
   const { label, value, options, onChange } = props
@@ -38,7 +45,15 @@ export function Dropdown(props: DropdownProps) {
       </button>
       {open && (
         <ul className={styles.options} id={optionsId}>
-          {options.map(renderOption)}
+          {options.map((option) => (
+            <DropdownOption
+              key={option.value}
+              option={option}
+              selected={option.value === value}
+              onSelect={selectOption}
+              onKeyDown={handleKeyDown}
+            />
+          ))}
         </ul>
       )}
     </div>
@@ -58,28 +73,9 @@ export function Dropdown(props: DropdownProps) {
     setOpen((previous) => !previous)
   }
 
-  function renderOption(option: DropdownProps['options'][number]) {
-    const selected = option.value === value
-
-    return (
-      <li key={option.value}>
-        <button
-          type="button"
-          className={styles.option}
-          aria-pressed={selected}
-          onClick={selectOption}
-          onKeyDown={handleKeyDown}
-        >
-          {option.label}
-          {selected && <Check size={16} aria-hidden />}
-        </button>
-      </li>
-    )
-
-    function selectOption() {
-      onChange(option.value)
-      closeAndFocusTrigger()
-    }
+  function selectOption(optionValue: string) {
+    onChange(optionValue)
+    closeAndFocusTrigger()
   }
 
   function closeAndFocusTrigger() {
@@ -101,5 +97,28 @@ export function Dropdown(props: DropdownProps) {
         setOpen(false)
       }
     }
+  }
+}
+
+function DropdownOption(props: DropdownOptionProps) {
+  const { option, selected, onSelect, onKeyDown } = props
+
+  return (
+    <li>
+      <button
+        type="button"
+        className={styles.option}
+        aria-pressed={selected}
+        onClick={selectOption}
+        onKeyDown={onKeyDown}
+      >
+        {option.label}
+        {selected && <Check size={16} aria-hidden />}
+      </button>
+    </li>
+  )
+
+  function selectOption() {
+    onSelect(option.value)
   }
 }

@@ -44,7 +44,7 @@ export function usePostDetails(postId: number) {
           : undefined
       return (
         cached?.filter((comment) => comment.postId === postId) ??
-        fetchComments(signal, postId)
+        fetchComments({ postId, signal })
       )
     },
     initialData: () =>

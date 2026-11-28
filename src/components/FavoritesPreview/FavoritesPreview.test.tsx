@@ -22,9 +22,7 @@ it('should show a saved post and its comment count without a view-all action', (
     screen.getByRole('link', { name: firstPost.title }).getAttribute('href'),
   ).toBe('/posts/1')
   expect(screen.getByText('2 comments')).toBeTruthy()
-  expect(
-    screen.queryByRole('button', { name: 'View all favorites' }),
-  ).toBeNull()
+  expect(screen.queryByText('View all favorites')).toBeNull()
 })
 
 it('should show four of five saved posts and let the user view them all', async () => {
