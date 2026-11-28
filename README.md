@@ -17,7 +17,7 @@ A responsive React and TypeScript feed with post details, comments, search, save
 
 ## Run locally
 
-Requires Node.js 22.12 or newer.
+Requires Node.js 22 or newer.
 
 ```sh
 npm ci
