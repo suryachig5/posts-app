@@ -62,8 +62,8 @@ describe('usePostDetails', () => {
   it('should wait for feed queries already in flight', async () => {
     const { client, wrapper } = createQueryHarness()
     fetchCommentsMock.mockResolvedValue([firstComment, secondComment])
-    const posts = client.fetchQuery(postsListOptions)
-    const comments = client.fetchQuery(commentsListOptions)
+    const posts = client.query(postsListOptions)
+    const comments = client.query(commentsListOptions)
     const { result } = renderHook(() => usePostDetails(1), { wrapper })
     await Promise.all([posts, comments])
     await waitFor(() =>
@@ -81,8 +81,8 @@ describe('usePostDetails', () => {
       new Error('Feed comments unavailable'),
     )
     const feedRequests = Promise.allSettled([
-      client.fetchQuery(postsListOptions),
-      client.fetchQuery(commentsListOptions),
+      client.query(postsListOptions),
+      client.query(commentsListOptions),
     ])
     const { result } = renderHook(() => usePostDetails(1), { wrapper })
     await feedRequests

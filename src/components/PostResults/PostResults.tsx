@@ -16,19 +16,25 @@ interface RetryAction {
 interface PostResultsProps {
   resultsRef: Ref<HTMLElement>
   onReset?: () => void
-  userId: number | null
-  loadingPosts: boolean
-  retryPosts?: RetryAction
-  retryComments?: RetryAction
-  getCommentCount: (postId: number) => number | undefined
-  visiblePosts?: Post[]
-  favoritesOnly: boolean
-  normalizedSearchValue: string
+  filters: {
+    userId: number | null
+    favoritesOnly: boolean
+    normalizedSearchValue: string
+  }
+  posts: {
+    visible?: Post[]
+    loading: boolean
+    retry?: RetryAction
+  }
+  comments: {
+    getCount: (postId: number) => number | undefined
+    retry?: RetryAction
+  }
 }
 
 interface PostResultsListProps {
   posts: Post[]
-  getCommentCount: PostResultsProps['getCommentCount']
+  getCommentCount: PostResultsProps['comments']['getCount']
   commentsFailed: boolean
   normalizedSearchValue: string
   favoritesOnly: boolean
@@ -39,18 +45,14 @@ interface PostResultsListProps {
  * a message when there are no results, and a retry button if a request fails.
  */
 export function PostResults(props: PostResultsProps) {
+  const { filters, posts, comments, resultsRef, onReset } = props
+  const { favoritesOnly, normalizedSearchValue, userId } = filters
   const {
-    loadingPosts,
-    retryPosts,
-    retryComments,
-    getCommentCount,
-    visiblePosts,
-    resultsRef,
-    favoritesOnly,
-    normalizedSearchValue,
-    userId,
-    onReset,
-  } = props
+    visible: visiblePosts,
+    loading: loadingPosts,
+    retry: retryPosts,
+  } = posts
+  const { getCount: getCommentCount, retry: retryComments } = comments
   const commentsFailed = Boolean(retryComments)
 
   return (

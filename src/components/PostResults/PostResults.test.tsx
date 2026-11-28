@@ -7,16 +7,14 @@ import { firstPost } from '../../test/mockData'
 import { PostResults } from './PostResults'
 
 const defaultProps = {
-  favoritesOnly: false,
-  getCommentCount: () => 3,
-  loadingPosts: false,
-  normalizedSearchValue: '',
+  filters: { favoritesOnly: false, normalizedSearchValue: '', userId: null },
+  posts: { loading: false },
+  comments: { getCount: () => 3 },
   resultsRef: null,
-  userId: null,
 }
 
 it('should show a skeleton while posts load', () => {
-  render(<PostResults {...defaultProps} loadingPosts />)
+  render(<PostResults {...defaultProps} posts={{ loading: true }} />)
 
   expect(screen.getByRole('status', { name: 'Loading posts' })).toBeTruthy()
   expect(screen.queryByRole('list')).toBeNull()
@@ -29,8 +27,8 @@ it('should show the filtered post, its comment count, and a reset action', async
     <PostResults
       {...defaultProps}
       onReset={onReset}
-      userId={firstPost.userId}
-      visiblePosts={[firstPost]}
+      filters={{ ...defaultProps.filters, userId: firstPost.userId }}
+      posts={{ loading: false, visible: [firstPost] }}
     />,
     { wrapper: MemoryRouter },
   )
@@ -47,7 +45,12 @@ it('should show the filtered post, its comment count, and a reset action', async
 it('should let the user retry a failed posts request', async () => {
   const user = userEvent.setup()
   const run = vi.fn()
-  render(<PostResults {...defaultProps} retryPosts={{ pending: false, run }} />)
+  render(
+    <PostResults
+      {...defaultProps}
+      posts={{ loading: false, retry: { pending: false, run } }}
+    />,
+  )
 
   expect(screen.getByText('We couldn’t load the posts.')).toBeTruthy()
   await user.click(screen.getByRole('button', { name: 'Try again' }))
@@ -60,9 +63,8 @@ it('should keep posts visible and let the user retry a failed comments request',
   render(
     <PostResults
       {...defaultProps}
-      getCommentCount={() => undefined}
-      retryComments={{ pending: false, run }}
-      visiblePosts={[firstPost]}
+      comments={{ getCount: () => undefined, retry: { pending: false, run } }}
+      posts={{ loading: false, visible: [firstPost] }}
     />,
     { wrapper: MemoryRouter },
   )
@@ -91,9 +93,12 @@ it.each([
     render(
       <PostResults
         {...defaultProps}
-        favoritesOnly={favoritesOnly}
-        normalizedSearchValue={search}
-        visiblePosts={[]}
+        filters={{
+          ...defaultProps.filters,
+          favoritesOnly,
+          normalizedSearchValue: search,
+        }}
+        posts={{ loading: false, visible: [] }}
       />,
     )
 

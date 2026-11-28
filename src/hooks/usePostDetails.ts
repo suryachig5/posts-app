@@ -1,3 +1,8 @@
+import type {
+  QueryClient,
+  QueryExecuteOptions,
+  QueryKey,
+} from '@tanstack/react-query'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { fetchComments, fetchIndividualPost } from '../api/posts'
@@ -15,46 +20,51 @@ export function usePostDetails(postId: number) {
   const post = useQuery({
     queryKey: postKeys.detail(postId),
     enabled,
-    queryFn: async ({ signal }) => {
-      const cached =
-        client.getQueryState(postsListOptions.queryKey)?.fetchStatus ===
-        'fetching'
-          ? await client.fetchQuery(postsListOptions).catch(() => undefined)
-          : undefined
-      return (
-        cached?.find((entry) => entry.id === postId) ??
-        fetchIndividualPost(postId, signal)
-      )
-    },
-    initialData: () =>
-      client
-        .getQueryData(postsListOptions.queryKey)
-        ?.find((entry) => entry.id === postId),
-    initialDataUpdatedAt: () =>
-      client.getQueryState(postsListOptions.queryKey)?.dataUpdatedAt,
+    ...reuseFeedData(
+      client,
+      postsListOptions,
+      (posts) => posts.find((entry) => entry.id === postId),
+      (signal) => fetchIndividualPost(postId, signal),
+    ),
   })
 
   const comments = useQuery({
     queryKey: commentKeys.byPost(postId),
     enabled,
-    queryFn: async ({ signal }) => {
-      const cached =
-        client.getQueryState(commentsListOptions.queryKey)?.fetchStatus ===
-        'fetching'
-          ? await client.fetchQuery(commentsListOptions).catch(() => undefined)
-          : undefined
-      return (
-        cached?.filter((comment) => comment.postId === postId) ??
-        fetchComments({ postId, signal })
-      )
-    },
-    initialData: () =>
-      client
-        .getQueryData(commentsListOptions.queryKey)
-        ?.filter((comment) => comment.postId === postId),
-    initialDataUpdatedAt: () =>
-      client.getQueryState(commentsListOptions.queryKey)?.dataUpdatedAt,
+    ...reuseFeedData(
+      client,
+      commentsListOptions,
+      (comments) => comments.filter((comment) => comment.postId === postId),
+      (signal) => fetchComments({ postId, signal }),
+    ),
   })
 
   return { post, comments, enabled }
+}
+
+function reuseFeedData<Item, Detail, Key extends QueryKey>(
+  client: QueryClient,
+  feedOptions: QueryExecuteOptions<Item[], Error, Item[], Item[], Key>,
+  selectDetail: (items: Item[]) => Detail | undefined,
+  fetchDetail: (signal: AbortSignal) => Promise<Detail>,
+) {
+  const { queryKey } = feedOptions
+
+  return {
+    initialData: () => {
+      const items = client.getQueryData<Item[]>(queryKey)
+      return items === undefined ? undefined : selectDetail(items)
+    },
+    initialDataUpdatedAt: () => client.getQueryState(queryKey)?.dataUpdatedAt,
+    queryFn: async ({ signal }: { signal: AbortSignal }) => {
+      if (client.getQueryState(queryKey)?.fetchStatus === 'fetching') {
+        const items = await client.query(feedOptions).catch(() => undefined)
+        const detail = items === undefined ? undefined : selectDetail(items)
+
+        if (detail !== undefined) return detail
+      }
+
+      return fetchDetail(signal)
+    },
+  }
 }

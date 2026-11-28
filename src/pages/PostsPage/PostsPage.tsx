@@ -38,13 +38,13 @@ export function PostsPage() {
     showPreview,
     userIds,
     visiblePosts,
-  } = getPostsPageDisplayData(
+  } = getPostsPageDisplayData({
     entries,
     favoriteIds,
     search,
     favoritesOnly,
     userId,
-  )
+  })
   const commentsFailed = comments.isError && !comments.data
 
   return (
@@ -86,22 +86,25 @@ export function PostsPage() {
             ? resetFilters
             : undefined
         }
-        userId={selectedUserId}
-        loadingPosts={posts.isPending}
-        retryPosts={
-          posts.isError && !posts.data
-            ? { run: posts.refetch, pending: posts.isFetching }
-            : undefined
-        }
-        retryComments={
-          commentsFailed
+        filters={{
+          userId: selectedUserId,
+          favoritesOnly,
+          normalizedSearchValue,
+        }}
+        posts={{
+          visible: posts.data ? visiblePosts : undefined,
+          loading: posts.isPending,
+          retry:
+            posts.isError && !posts.data
+              ? { run: posts.refetch, pending: posts.isFetching }
+              : undefined,
+        }}
+        comments={{
+          getCount: getCommentCount,
+          retry: commentsFailed
             ? { run: comments.refetch, pending: comments.isFetching }
-            : undefined
-        }
-        getCommentCount={getCommentCount}
-        visiblePosts={posts.data ? visiblePosts : undefined}
-        favoritesOnly={favoritesOnly}
-        normalizedSearchValue={normalizedSearchValue}
+            : undefined,
+        }}
       />
     </>
   )

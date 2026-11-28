@@ -1,17 +1,20 @@
 import type { Post } from '../../api/posts'
 
+interface PostsPageDisplayOptions {
+  entries: Post[]
+  favoriteIds: number[]
+  search: string
+  favoritesOnly: boolean
+  userId: number | null
+}
+
 /**
  * Takes the loaded posts, favorite IDs, search text, and selected filters.
  * Returns the matching posts, the user dropdown options, and the favorites
  * to preview, along with whether the preview should appear.
  */
-export function getPostsPageDisplayData(
-  entries: Post[],
-  favoriteIds: number[],
-  search: string,
-  favoritesOnly: boolean,
-  userId: number | null,
-) {
+export function getPostsPageDisplayData(options: PostsPageDisplayOptions) {
+  const { entries, favoriteIds, search, favoritesOnly, userId } = options
   const normalizedSearchValue = search.trim().toLowerCase()
   const favoritePosts = getFavoritePosts(entries, favoriteIds)
   const scopedPosts = favoritesOnly ? favoritePosts : entries
