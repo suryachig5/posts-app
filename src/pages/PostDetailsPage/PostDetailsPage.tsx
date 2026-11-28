@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import type { Post } from '../../api/posts'
+import type { Comment, Post } from '../../api/posts'
 import { isNotFound } from '../../api/posts'
 import { CommentList } from '../../components/CommentList/CommentList'
 import { FavoriteButton } from '../../components/FavoriteButton/FavoriteButton'
@@ -20,7 +20,10 @@ interface PostArticleProps {
 }
 
 interface PostCommentsProps {
-  query: ReturnType<typeof usePostDetails>['comments']
+  comments?: Comment[]
+  failed: boolean
+  retrying: boolean
+  retry: () => void
 }
 
 /** Renders a post and its comments using the ID from the route. */
@@ -51,7 +54,12 @@ function renderDetails(details: ReturnType<typeof usePostDetails>) {
   return (
     <>
       <PostArticle post={post} />
-      <PostComments query={commentsQuery} />
+      <PostComments
+        comments={commentsQuery.data}
+        failed={commentsQuery.isError}
+        retrying={commentsQuery.isFetching}
+        retry={commentsQuery.refetch}
+      />
     </>
   )
 }
@@ -85,8 +93,8 @@ function PostArticle({ post }: PostArticleProps) {
   }
 }
 
-function PostComments({ query }: PostCommentsProps) {
-  const { data: comments } = query
+function PostComments(props: PostCommentsProps) {
+  const { comments } = props
 
   return (
     <section className={styles.comments} aria-labelledby="comments-heading">
@@ -101,19 +109,19 @@ function PostComments({ query }: PostCommentsProps) {
           </span>
         )}
       </div>
-      {renderComments(query)}
+      {renderComments(props)}
     </section>
   )
 }
 
-function renderComments(query: ReturnType<typeof usePostDetails>['comments']) {
-  const { data: comments, isError, isFetching, refetch } = query
-  if (!comments && isError) {
+function renderComments(props: PostCommentsProps) {
+  const { comments, failed, retrying, retry } = props
+  if (!comments && failed) {
     return (
       <RetryNotice
         message="We couldn’t load comments."
-        retry={refetch}
-        retrying={isFetching}
+        retry={retry}
+        retrying={retrying}
       />
     )
   }

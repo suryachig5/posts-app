@@ -43,6 +43,12 @@ npm run dev
 
 **Zustand owns client state.** Search text, active filters, and favorite post IDs live in Zustand. Search and filters stay in memory during navigation. Favorite IDs are saved in `localStorage` so favorites survive a browser restart. The feed applies search and filters locally to the posts in the query cache.
 
+**How post details reuse feed data.** The post and its comments load independently. When the feed already has either one, the detail page can reuse it without resetting its freshness timer. If the corresponding feed request is still running, the detail page waits for it and makes a request for just that post or its comments if it still needs the data. Waiting avoids duplicate requests, but a slow request for all comments can delay the selected post’s thread. For a larger feed, the API could include comment counts with each post so the app can fetch full threads only when opened.
+
+**Filter navigation trade-off.** Filters are kept in Zustand so typing and changing filters leave the URL and browser history alone. As a result, filtered views cannot be shared by URL, and Back returns to the previous page in the history. If shareable views become a requirement, the URL can own search and filters while Zustand continues to own saved favorites.
+
+**API validation.** Axios responses are checked at the API boundary before they enter the query cache. Malformed payloads follow the existing error and retry paths.
+
 The user dropdown is built from the posts’ user IDs. In Favorites, it lists users with saved posts. “More posts by this user” opens the filtered feed, and “Reset filters” clears all active filters.
 
 ## Component conventions

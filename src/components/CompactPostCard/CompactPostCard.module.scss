@@ -42,10 +42,7 @@ article.card {
 }
 
 .heading {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3);
+  min-width: 0;
 
   h3 {
     font-size: clamp(1.38rem, 3vw, 1.85rem);
@@ -57,6 +54,12 @@ article.card {
     min-width: 0;
     min-block-size: 3lh;
     font-size: 1.17rem;
+  }
+
+  .author {
+    margin-top: var(--space-1);
+    color: var(--muted);
+    font-size: var(--font-size-sm);
   }
 }
 

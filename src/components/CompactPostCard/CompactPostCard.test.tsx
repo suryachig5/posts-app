@@ -5,7 +5,7 @@ import { expect, it } from 'vitest'
 import { firstPost } from '../../test/mockData'
 import { CompactPostCard } from './CompactPostCard'
 
-it('should show the post link, comment count, and favorite button in the preview', () => {
+it('should show the post link, user, comment count, and favorite button in the preview', () => {
   render(<CompactPostCard post={firstPost} commentCount={0} />, {
     wrapper: MemoryRouter,
   })
@@ -13,6 +13,7 @@ it('should show the post link, comment count, and favorite button in the preview
   expect(
     screen.getByRole('link', { name: firstPost.title }).getAttribute('href'),
   ).toBe('/posts/1')
+  expect(screen.getByText(`User ${firstPost.userId}`)).toBeTruthy()
   expect(screen.queryByText(firstPost.body)).toBeNull()
   expect(screen.getByText('0 comments')).toBeTruthy()
   expect(

@@ -2,6 +2,11 @@ import axios from 'axios'
 
 import { API_BASE_URL } from '../constants/apiBaseUrl'
 import { API_TIMEOUT_MS } from '../constants/queryTimes'
+import {
+  parseCommentsResponse,
+  parseIndividualPostResponse,
+  parsePostsResponse,
+} from './helpers/postResponseParsers'
 
 /** A post returned by the posts API. */
 export interface Post {
@@ -27,12 +32,14 @@ const client = axios.create({
 
 /** Fetches the full list of posts for the feed. */
 export async function fetchPosts() {
-  return (await client.get<Post[]>('/posts')).data
+  const { data } = await client.get<unknown>('/posts')
+  return parsePostsResponse(data)
 }
 
 /** Fetches a single post by ID and supports request cancellation. */
 export async function fetchIndividualPost(postId: number, signal: AbortSignal) {
-  return (await client.get<Post>(`/posts/${postId}`, { signal })).data
+  const { data } = await client.get<unknown>(`/posts/${postId}`, { signal })
+  return parseIndividualPostResponse(data, postId)
 }
 
 /** Fetches comments for one post when an ID is supplied, or all comments otherwise. */
@@ -40,11 +47,11 @@ export async function fetchComments(
   signal: AbortSignal | undefined,
   postId?: number,
 ) {
-  const { data } = await client.get<Comment[]>('/comments', {
+  const { data } = await client.get<unknown>('/comments', {
     params: { postId },
     signal,
   })
-  return data
+  return parseCommentsResponse(data)
 }
 
 /** Checks whether an API request failed with HTTP 404. */

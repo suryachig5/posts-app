@@ -9,7 +9,7 @@ import styles from './CompactPostCard.module.scss'
 /** Renders a compact post preview for the Favorites lane. */
 export function CompactPostCard(props: PostCardProps) {
   const { post, commentCount, commentsFailed } = props
-  const { id, title } = post
+  const { id, title, userId } = post
 
   return (
     <article className={styles.card}>
@@ -19,6 +19,7 @@ export function CompactPostCard(props: PostCardProps) {
             <span className={styles.title}>{title}</span>
           </Link>
         </h3>
+        <p className={styles.author}>User {userId}</p>
       </div>
       <div className={styles.footer}>
         <CommentCount

@@ -1,0 +1,22 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.list {
+  :is(a, button) {
+    scroll-margin-top: 5rem;
+  }
+}
+.resultActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0 var(--space-3);
+  min-height: var(--touch);
+  max-width: 100%;
+  margin-inline-start: auto;
+}
