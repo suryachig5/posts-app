@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { fetchComments, fetchIndividualPost } from '../api/posts'
+import { commentKeys, postKeys } from '../api/queryKeys'
 import { commentsListOptions, postsListOptions } from './usePostsList'
 
 /**
@@ -12,7 +13,7 @@ export function usePostDetails(postId: number) {
   const enabled = Number.isFinite(postId)
 
   const post = useQuery({
-    queryKey: ['posts', 'detail', postId],
+    queryKey: postKeys.detail(postId),
     enabled,
     queryFn: async ({ signal }) => {
       const cached =
@@ -34,7 +35,7 @@ export function usePostDetails(postId: number) {
   })
 
   const comments = useQuery({
-    queryKey: ['comments', 'detail', postId],
+    queryKey: commentKeys.byPost(postId),
     enabled,
     queryFn: async ({ signal }) => {
       const cached =

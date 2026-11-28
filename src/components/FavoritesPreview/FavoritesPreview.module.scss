@@ -1,7 +1,8 @@
 .favorites {
+  --favorites-background: var(--lane);
   padding: var(--space-4);
   border-radius: var(--radius);
-  background: var(--lane);
+  background: var(--favorites-background);
   margin-bottom: var(--space-6);
 }
 .favorites .heading {

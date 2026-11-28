@@ -1,17 +1,36 @@
 :root {
   color-scheme: light;
 
-  --canvas: #ffffff;
-  --surface: #ffffff;
-  --text: #000000;
-  --muted: #555555;
-  --border: #dedede;
-  --accent: #000000;
-  --accent-soft: #eeeeee;
-  --lane: #f7f7f7;
-  --favorite: #a43a47;
-  --favorite-soft: #f8e8e8;
-  --skeleton: #eeeeee;
+  --white: #ffffff;
+  --gray-50: #f7f7f7;
+  --gray-100: #eeeeee;
+  --gray-200: #dedede;
+  --gray-300: #bcbcbc;
+  --gray-700: #555555;
+  --gray-800: #404040;
+  --gray-850: #303030;
+  --gray-900: #242424;
+  --gray-950: #181818;
+  --black: #000000;
+  --rose-50: #f8e8e8;
+  --rose-200: #ff9eaa;
+  --rose-700: #a43a47;
+  --rose-950: #48272e;
+  --black-alpha-13: #0002;
+  --black-alpha-50: #0008;
+
+  --canvas: var(--white);
+  --surface: var(--white);
+  --text: var(--black);
+  --muted: var(--gray-700);
+  --border: var(--gray-200);
+  --accent: var(--black);
+  --accent-soft: var(--gray-100);
+  --lane: var(--gray-50);
+  --favorite: var(--rose-700);
+  --favorite-soft: var(--rose-50);
+  --skeleton: var(--gray-100);
+  --overlay-shadow: var(--black-alpha-13);
 
   --font-body: 'Source Sans 3 Variable', system-ui, sans-serif;
   --font-size-sm: 0.875rem;
@@ -34,4 +53,23 @@
   --page-gutter: clamp(var(--space-4), 4vw, var(--space-6));
   --page-top: clamp(var(--space-5), 5vw, var(--space-7));
   --touch: 2.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+
+    --canvas: var(--gray-950);
+    --surface: var(--gray-900);
+    --text: var(--gray-50);
+    --muted: var(--gray-300);
+    --border: var(--gray-700);
+    --accent: var(--white);
+    --accent-soft: var(--gray-800);
+    --lane: var(--gray-850);
+    --favorite: var(--rose-200);
+    --favorite-soft: var(--rose-950);
+    --skeleton: var(--gray-800);
+    --overlay-shadow: var(--black-alpha-50);
+  }
 }

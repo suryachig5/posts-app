@@ -29,11 +29,11 @@ npm run dev
 ## Source layout
 
 - `routes/` defines routes, loading fallbacks, and an error boundary for unexpected rendering or lazy-loading failures.
-- `pages/` feed and detail screens.
+- `pages/` contains the feed and detail screens.
 - `components/` contains shared components that are used to build the pages.
 - `components/LoadingSkeletons/` contains the loading placeholders and shimmer styles.
 - `hooks/` defines the TanStack Query calls and cache reuse.
-- `api/` contains the Axios REST client and response types.
+- `api/` contains the Axios REST client, response validation, and shared query keys.
 - `store/` defines the Zustand stores for search, filters, and favorite post IDs.
 - `styles/` contains shared design tokens and base styles.
 
@@ -50,6 +50,11 @@ npm run dev
 **API validation.** Axios responses are checked at the API boundary before they enter the query cache. Malformed payloads follow the existing error and retry paths.
 
 The user dropdown is built from the posts’ user IDs. In Favorites, it lists users with saved posts. “More posts by this user” opens the filtered feed, and “Reset filters” clears all active filters.
+
+## Scaling the feed
+
+- **Comment counts.** The JSONPlaceholder post payload has no comment count, so the feed fetches the roughly 500 comments in one request and groups them by post ID. That keeps counts available without making a request for each card, at the cost of downloading comment bodies on the feed. With a backend we control, each paginated post would include its comment count and the detail route would fetch the selected thread on demand.
+- **Pagination and search.** At 100 posts, local search provides immediate results and the complete list is small enough to render. If the feed grows, we can check how it loads, searches, and scrolls on a lower-end phone. Cursor pagination would shrink the initial download, and server-side search would still let users find posts beyond the pages they’ve loaded. We could debounce those requests so typing doesn’t send one per keystroke. If keeping more cards on screen starts to slow scrolling, we can render just the cards in and around the viewport.
 
 ## Component conventions
 

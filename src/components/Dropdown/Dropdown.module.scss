@@ -25,6 +25,7 @@
   }
 }
 .options {
+  --dropdown-shadow: 0 4px 12px var(--overlay-shadow);
   display: grid;
   gap: var(--space-1);
   position: absolute;
@@ -38,7 +39,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: 0 4px 12px #0002;
+  box-shadow: var(--dropdown-shadow);
 }
 .option {
   border: 0;
