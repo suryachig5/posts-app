@@ -1,11 +1,11 @@
 import { FavoritesPreview } from '../../components/FavoritesPreview/FavoritesPreview'
 import { FeedControls } from '../../components/FeedControls/FeedControls'
 import { PostResults } from '../../components/PostResults/PostResults'
+import { getPostsPageDisplayData } from '../../helpers/getPostsPageDisplayData'
 import { usePostsList } from '../../hooks/usePostsList'
+import { useStickyControls } from '../../hooks/useStickyControls'
 import { useFavorites } from '../../store/favorites'
 import { useFeedFilter } from '../../store/feedFilter'
-import { getPostsPageDisplayData } from './getPostsPageDisplayData'
-import { useStickyControls } from './useStickyControls'
 
 import styles from './PostsPage.module.scss'
 
@@ -57,57 +57,64 @@ export function PostsPage() {
         ref={controlsMarkerRef}
         aria-hidden="true"
       />
-      {entries.length > 0 && (
-        <FeedControls
-          controlsRef={controlsRef}
-          showCompactTitle={showCompactTitle}
-          pinned={controlsPinned}
-          userIds={userIds}
-          userId={selectedUserId}
-          onChangeUser={setUserId}
-          search={search}
-          favoritesOnly={favoritesOnly}
-          onSearch={setSearch}
-          onChangeFilter={setFavoritesOnly}
-        />
-      )}
-      {showPreview && (
-        <FavoritesPreview
-          posts={favoritePosts}
-          commentsFailed={commentsFailed}
-          getCommentCount={getCommentCount}
-          showAll={showAllFavorites}
-        />
-      )}
-      <PostResults
-        resultsRef={resultsRef}
-        onReset={
-          search !== '' || favoritesOnly || userId !== null
-            ? resetFilters
-            : undefined
-        }
-        filters={{
-          userId: selectedUserId,
-          favoritesOnly,
-          normalizedSearchValue,
-        }}
-        posts={{
-          visible: posts.data ? visiblePosts : undefined,
-          loading: posts.isPending,
-          retry:
-            posts.isError && !posts.data
-              ? { run: posts.refetch, pending: posts.isFetching }
-              : undefined,
-        }}
-        comments={{
-          getCount: getCommentCount,
-          retry: commentsFailed
-            ? { run: comments.refetch, pending: comments.isFetching }
-            : undefined,
-        }}
-      />
+      {entries.length > 0 && <FeedControls {...getFeedControlsProps()} />}
+      {showPreview && <FavoritesPreview {...getFavoritesPreviewProps()} />}
+      <PostResults {...getPostResultsProps()} />
     </>
   )
+
+  function getFeedControlsProps() {
+    return {
+      controlsRef,
+      showCompactTitle,
+      pinned: controlsPinned,
+      userIds,
+      userId: selectedUserId,
+      onChangeUser: setUserId,
+      search,
+      favoritesOnly,
+      onSearch: setSearch,
+      onChangeFilter: setFavoritesOnly,
+    }
+  }
+
+  function getFavoritesPreviewProps() {
+    return {
+      posts: favoritePosts,
+      commentsFailed,
+      getCommentCount,
+      showAll: showAllFavorites,
+    }
+  }
+
+  function getPostResultsProps() {
+    return {
+      resultsRef,
+      onReset:
+        search !== '' || favoritesOnly || userId !== null
+          ? resetFilters
+          : undefined,
+      filters: {
+        userId: selectedUserId,
+        favoritesOnly,
+        normalizedSearchValue,
+      },
+      posts: {
+        visible: posts.data ? visiblePosts : undefined,
+        loading: posts.isPending,
+        retry:
+          posts.isError && !posts.data
+            ? { run: posts.refetch, pending: posts.isFetching }
+            : undefined,
+      },
+      comments: {
+        getCount: getCommentCount,
+        retry: commentsFailed
+          ? { run: comments.refetch, pending: comments.isFetching }
+          : undefined,
+      },
+    }
+  }
 
   function getCommentCount(postId: number) {
     return comments.data ? (comments.data.get(postId)?.length ?? 0) : undefined

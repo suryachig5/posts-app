@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 
-import { firstPost, secondPost } from '../../test/mockData'
+import { firstPost, secondPost } from '../test/mockData'
 import { getPostsPageDisplayData } from './getPostsPageDisplayData'
 
 const otherUserPost = { ...secondPost, userId: 2 }
